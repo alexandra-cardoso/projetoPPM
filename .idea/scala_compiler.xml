@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ScalaCompilerConfiguration">
-    <profile name="sbt 1" modules="projetoppm_7603,projetoppm_7603.main,projetoppm_7603.test" />
+    <option name="separateProdTestSources" value="true" />
+    <profile name="sbt 1" modules="projetoPPM,projetoPPM.main,projetoPPM.test,projetoppm_4806,projetoppm_4806.main,projetoppm_4806.test" />
   </component>
 </project>

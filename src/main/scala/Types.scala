@@ -1,4 +1,4 @@
-import scala.collection.parallel.imutable.ParMap
+import scala.collection.parallel.immutable.ParMap
 
 type Coord2D = (Int, Int) //(row, column)
 type Board = ParMap[Coord2D, Stone]
