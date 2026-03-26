@@ -1,8 +1,8 @@
 import scala.io.StdIn.{readInt, readLine}
-import scala.annotation.tailrec // IMPORTANTE para o @tailrec
+import scala.annotation.tailrec
 
 case class Game(
-                   board: List[List[Int]],    // Mantive 'board'
+                   board: List[List[Int]],    
                    currentPlayer: Int,
                    message: String = ""
                )
@@ -53,7 +53,7 @@ object KonaneGame extends App {
     @tailrec
     def gameLoop(estado: Game): Unit = {
         println("\n--- ESTADO DO TABULEIRO ---")
-        Game.renderBoard(estado.board) // Corrigido para .board
+        Game.renderBoard(estado.board)
 
         println(s"Mensagem: ${estado.message}")
         val playerStr = if(estado.currentPlayer == Game.white) "Brancas" else "Pretas"
