@@ -49,47 +49,63 @@ object Game {
             }
         }.to(scala.collection.parallel.immutable.ParMap)
 
-        Game(tabuleiro, Stone.Black, "Jogo iniciado com flatMap/map!")
+        Game(tabuleiro, Stone.Black, "Jogo iniciado!")
     }
 }
 
 object KonaneGame extends App {
 
-    @tailrec
-    def gameLoop(estado: Game): Unit = {
-        println("\n--- ESTADO DO TABULEIRO ---")
-        Game.render(estado.board)
+        @tailrec
+        def gameLoop(state: Game, lstOpenCoords: List[Coord2D]): Unit = {
+            Game.render(state.board)
+            println(s"\nMensagem: ${state.message}")
+            val pStr = if (state.currentPlayer == Stone.White) "Brancas" else "Pretas"
+            println(s"Vez de: $pStr")
 
-        println(s"Mensagem: ${estado.message}")
-        val playerStr = if(estado.currentPlayer == Stone.White) "Brancas" else "Pretas"
-        println(s"Vez do Jogador: $playerStr")
+            print("Origem (linha) ou q p/ sair: ")
 
-        print("\nEscolha a peça (linha) ou -1 para sair: ")
-        val l1 = readInt()
+            val l1 = readInt()
+            if (l1 == -1) return println("Fim de jogo!")
 
-        if (l1 == -1) {
-            println("Fim de jogo!")
-        } else {
-            print("Escolha a peça (coluna): ")
+            print("Origem (coluna): ")
             val c1 = readInt()
             print("Destino (linha): ")
             val l2 = readInt()
             print("Destino (coluna): ")
             val c2 = readInt()
 
-            // Lógica de Troca de Turno (Usando o Enum Stone)
-            val proximoJogador = Game.opponent(estado.currentPlayer)
+            val starterStone = state.board.get((l1, c1))
 
-            val novoEstado = estado.copy(
-                currentPlayer = proximoJogador,
-                message = s"O jogador $playerStr tentou mover de ($l1, $c1) para ($l2, $c2)"
-            )
+            if (starterStone.contains(state.currentPlayer)) {
 
-            gameLoop(novoEstado)
+                val (result, newList) = Logic.play(state.board, state.currentPlayer, (l1, c1), (l2, c2), lstOpenCoords)
+
+                result match {
+                    case Some(newBoard) =>
+                        print(s"Última jogada: ($l1,$c1) para ($l2,$c2)")
+                        print(" Queres jogar novamente? s/n")
+                        val res = readLine()
+                        res match {
+                            case "s" => gameLoop(
+                                state.copy(board = newBoard, currentPlayer = state.currentPlayer, message = "jogada válida"),
+                                newList
+                            )
+                            case "n" =>  gameLoop(
+                                state.copy(board = newBoard, currentPlayer = Game.opponent(state.currentPlayer), message = "próximo jogador"),
+                                newList
+                            )
+                        }
+                    case None =>
+                        gameLoop(state.copy(message = "SALTO INVÁLIDO! Tenta outra vez."), lstOpenCoords)
+                }
+            } else {
+                gameLoop(state.copy(message = "Essa peça não é tua ou a casa está vazia!"), lstOpenCoords)
+            }
         }
-    }
+        //  casas do meio (3,3) e (3,4) já estão vazias.
+        val inicialGame = Game.initBoard()
+        val boardWithoutMiddle = inicialGame.board - (3, 3) - (3, 4)
+        val inicialEmpty = List((3, 3), (3, 4))
 
-    // Iniciar o loop com o objeto Game completo
-    val estadoInicial = Game.initBoard()
-    gameLoop(estadoInicial)
+        gameLoop(inicialGame.copy(board = boardWithoutMiddle), inicialEmpty)
 }
