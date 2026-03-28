@@ -7,6 +7,7 @@ case class Game(
                    board: Board,
                    currentPlayer: Stone, // ou as pedras pretas ou as brancas
                    message: String = ""
+
                )
 
 object Game {
@@ -22,7 +23,7 @@ object Game {
     }
 
     @tailrec
-    private def draw(board: Board, r: Int, c: Int): Unit = {
+     def draw(board: Board, r: Int, c: Int): Unit = {
         (r, c) match {
             case (8, 0) => //caso esteja no final do tabuleiro
                 println("  -------------------------")
@@ -37,6 +38,20 @@ object Game {
                     case None => print(" . ")
                 }
                 draw(board, r, c + 1)
+        }
+    }
+
+    @tailrec
+    def getOpenCoords(board: Board, r: Int, c: Int, acc: List[Coord2D]): List[Coord2D] = {
+        (r, c) match {
+            case (8, 0) => acc // Fim
+            case (r, 8) => getOpenCoords(board, r + 1, 0, acc) // Salta linha
+            case (r, c) =>
+                val newAcc = board.get((r, c)) match {
+                    case None => (r, c) :: acc // Se está vazio, adiciona
+                    case _ => acc
+                }
+                getOpenCoords(board, r, c + 1, newAcc)
         }
     }
 
@@ -59,6 +74,7 @@ object KonaneGame extends App {
         def gameLoop(state: Game, lstOpenCoords: List[Coord2D]): Unit = {
             Game.render(state.board)
             println(s"\nMensagem: ${state.message}")
+
             val pStr = if (state.currentPlayer == Stone.White) "Brancas" else "Pretas"
             println(s"Vez de: $pStr")
 
@@ -74,10 +90,9 @@ object KonaneGame extends App {
             print("Destino (coluna): ")
             val c2 = readInt()
 
+            val openCoords = Game.getOpenCoords(state.board, l1, c1, inicialEmpty)
             val starterStone = state.board.get((l1, c1))
-
             if (starterStone.contains(state.currentPlayer)) {
-
                 val (result, newList) = Logic.play(state.board, state.currentPlayer, (l1, c1), (l2, c2), lstOpenCoords)
 
                 result match {
