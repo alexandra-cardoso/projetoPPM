@@ -1,3 +1,4 @@
+import scala.annotation.tailrec
 class T3 {
 
   def playRandomly(board: Board,
@@ -12,28 +13,35 @@ class T3 {
 
   def findValidCoordFrom(board: Board, player: Stone, targetTo: Coord2D): Option[Coord2D] = {
     val opponent = if (player == Stone.Black) Stone.White else Stone.Black
-    val possibleFrom = List(
+
+    // 4 posiçoes onde a peça que captura pode estar
+    val options = List(
       (targetTo._1 - 2, targetTo._2),
       (targetTo._1 + 2, targetTo._2),
       (targetTo._1, targetTo._2 - 2),
       (targetTo._1, targetTo._2 + 2)
     )
-    // Find encontra a primeira coordeanda que satisfaz lógica
-    val valid = possibleFrom.find(coord => {
-        val isInside = coord._1 >= 0 && coord._1 < 8 && coord._2 >= 0 && coord._2 < 8
-
-        if (isInside) {
+  
+    @tailrec
+    def checkCoords(coords: List[Coord2D]): Option[Coord2D] = coords match {
+      case Nil => None
+      case coord :: tail =>
+        val valid = coord._1 >= 0 && coord._1 < 8 && coord._2 >= 0 && coord._2 < 8
+        
+        if (valid) {
+          // Peça a ser capturada
           val middle = ((coord._1 + targetTo._1) / 2, (coord._2 + targetTo._2) / 2)
-
+          // Ver se captura é possivel (peças de cores diferentes)
           (board.get(coord), board.get(middle)) match {
-            case (Some(s), Some(m)) if s == player && m == opponent => true
-            case _ => false
+            case (Some(s), Some(m)) if s == player && m == opponent => Some(coord)
+            case _ => checkCoords(tail) // continua procura para outra direçao
           }
         } else {
-          false
+          checkCoords(tail)  // continua procura para outra direçao
         }
-      })
-      valid
-  }
+    }
+
+  checkCoords(options) // Inicio do LOOP
+}
 
 }
