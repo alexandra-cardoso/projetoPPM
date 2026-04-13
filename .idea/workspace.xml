@@ -6,8 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="f66ae5e7-d17a-41c8-bc77-636717c0d1f6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/T3.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/T3.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/Logic.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/Logic.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/RandomMove.scala" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/T3.scala" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/main.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/main.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/openCoords.scala" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +99,7 @@
       <option name="presentableId" value="Default" />
       <updated>1774347434143</updated>
       <workItem from="1774517726620" duration="10151000" />
-      <workItem from="1776095213645" duration="1365000" />
+      <workItem from="1776095213645" duration="2625000" />
     </task>
     <servers />
   </component>
