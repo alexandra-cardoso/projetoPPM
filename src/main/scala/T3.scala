@@ -7,29 +7,25 @@ class T3 {
                    f: (List[Coord2D], MyRandom) => (Coord2D, MyRandom))
   :(Option[Board], MyRandom, List[Coord2D], Option[Coord2D]) = {
 
-    // Criamos uma função auxiliar recursiva aqui dentro!
     @tailrec
     def tentarJogar(currentRand: MyRandom, buracosATestar: List[Coord2D]): (Option[Board], MyRandom, List[Coord2D], Option[Coord2D]) = {
 
-      // Se já testámos todos e não deu nenhum, falha.
+      // caso paragem
       if (buracosATestar.isEmpty) {
         return (None, currentRand, lstOpenCoords, None)
       }
 
-      // 1. Obtemos a coordenada de destino à sorte a partir da lista TEMPORÁRIA
       val (coordTo, nextRand) = f(buracosATestar, currentRand)
 
-      // 2. Tentamos encontrar uma peça que consiga saltar para lá
       val coordFromOpt = findValidCoordFrom(board, player, coordTo)
 
+      // Só jogar quando encontra Some(coordFrom)
       coordFromOpt match {
         case Some(coordFrom) =>
-          // SUCESSO! Passamos a lista ORIGINAL (lstOpenCoords) para o Logic.play
           val resultadoJogada = Logic.play(board, player, coordFrom, coordTo, lstOpenCoords)
           (resultadoJogada._1, nextRand, resultadoJogada._2, Some(coordTo))
 
         case None =>
-          // FALHOU! Tiramos este buraco da lista temporária e tentamos de novo
           val restantes = buracosATestar.filterNot(_ == coordTo)
           tentarJogar(nextRand, restantes)
       }
