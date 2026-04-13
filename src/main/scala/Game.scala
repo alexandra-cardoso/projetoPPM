@@ -2,42 +2,58 @@ import scala.io.StdIn.{readInt, readLine}
 import scala.annotation.tailrec
 import scala.collection.parallel.immutable.ParMap
 
-
 case class Game(
                    board: Board,
+                   rows: Int,
+                   cols : Int,
                    currentPlayer: Stone, // ou as pedras pretas ou as brancas
                    message: String = ""
 
                )
 
 object Game {
-    def opponent(s: Stone): Stone = s match {
+    def opponent(s: Stone): Stone = s match { //define o oponente vedo quem é o jogador atual
         case Stone.Black => Stone.White
         case Stone.White => Stone.Black
     }
 
-    def render(board: Board): Unit = {
-        println("\n   0  1  2  3  4  5  6  7")
-        println("  -------------------------") //para indicar o número na parte de cima do tabuleiro
-        draw(board, 0, 0)
+    @tailrec
+        def makeHeader(current:Int, max:Int): Unit = {
+        (current < max) match {
+            case true =>
+                (current == 0 ) match {
+                    case true => print("    0")
+                    case false => print(f"$current%3d")
+                }
+                makeHeader(current + 1, max)
+            case false =>
+                println()
+        }
+    }
+
+    def render(game: Game): Unit = { //desenha efetivamente o board na consola chamando o draw que define o desenho do tabuleiro
+        makeHeader(0, game.cols)
+        println("  " + "-" * (game.cols *3+1))
+        draw(game, 0, 0)
     }
 
     @tailrec
-     def draw(board: Board, r: Int, c: Int): Unit = {
+     def draw(game: Game, r: Int, c: Int): Unit = {
         (r, c) match {
-            case (8, 0) => //caso esteja no final do tabuleiro
-                println("  -------------------------")
-            case (r, 8) => // para todas as linhas com y=8 vai meter um | no final da linha
+            case (row, 0) if row == game.rows =>//caso esteja no final do tabuleiro
+                println("  " + "-" * (game.cols *3+1))
+
+            case (row, col)  if col == game.cols=> // para todas as linhas com y=8 vai meter um | no final da linha
                 println("|")
-                draw(board, r + 1, 0) // desenha o board até aí e recomeça na linha asseguir recursivamente
-            case (r, c) => //caso não se saiba nenhum dos valores
-                if (c == 0) print(s"$r |") // se a coluna for a de índice 0 ou seja inicio da linha ele imprime o número da linha + a |
-                board.get((r, c)) match {
+                draw(game, r + 1, 0) // desenha o board até aí e recomeça na linha asseguir recursivamente
+            case (row, col) => //caso não se saiba nenhum dos valores
+                if (c == 0) print(s"$row |") // se a coluna for a de índice 0 ou seja inicio da linha ele imprime o número da linha + a |
+                game.board.get((row, col)) match {
                     case Some(Stone.Black) => print(" B ")
                     case Some(Stone.White) => print(" W ")
                     case None => print(" . ")
                 }
-                draw(board, r, c + 1)
+                draw(game, row, col + 1)
         }
     }
 
@@ -55,16 +71,16 @@ object Game {
         }
     }
 
-    def initBoard(): Game = {
-        val tabuleiro = (0 until 8).toList.flatMap { r => //flatMap em vez de criar uma lista de listas cria um lista de 64 elementos (8por8)
+    def initBoard(rows:Int,cols:Int): Game = {
+        val tabuleiro = (0 until rows).toList.flatMap { r => //flatMap em vez de criar uma lista de listas cria um lista de 64 elementos (8por8)
             // Para cada linha, criamos 0 a 7 (colunas)
-            (0 until 8).map { c => //aqui crio colunas dentro de cada linha, aqui decidi map pq queremos extamente um par coordenada-> pedra
+            (0 until cols).map { c => //aqui crio colunas dentro de cada linha, aqui decidi map pq queremos extamente um par coordenada-> pedra
                 val stone = if ((r + c) % 2 == 0) Stone.White else Stone.Black
                 (r, c) -> stone
             }
         }.to(scala.collection.parallel.immutable.ParMap)
 
-        Game(tabuleiro, Stone.Black, "Jogo iniciado!")
+        Game(tabuleiro,rows,cols, Stone.Black, "Jogo iniciado!")
     }
 }
 
@@ -72,7 +88,7 @@ object KonaneGame extends App {
 
         @tailrec
         def gameLoop(state: Game, lstOpenCoords: List[Coord2D]): Unit = {
-            Game.render(state.board)
+            Game.render(state)
             println(s"\nMensagem: ${state.message}")
 
             val pStr = if (state.currentPlayer == Stone.White) "Brancas" else "Pretas"
@@ -118,7 +134,7 @@ object KonaneGame extends App {
             }
         }
         //  casas do meio (3,3) e (3,4) já estão vazias.
-        val inicialGame = Game.initBoard()
+        val inicialGame = Game.initBoard(8,8) //escolhemos seguir a figura 1 do enunciado do projeto, fazendo o tabuleiro ser 8 por 8.
         val boardWithoutMiddle = inicialGame.board - (3, 3) - (3, 4)
         val inicialEmpty = List((3, 3), (3, 4))
 
