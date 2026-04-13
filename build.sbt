@@ -6,5 +6,5 @@ libraryDependencies += "org.scala-lang.modules" %% "scala-parallel-collections" 
 
 lazy val root = (project in file("."))
   .settings(
-    name := "projetoPPM"
+    name := "JG1_AlexandraCardoso129865_JoanaCardoso129867_RuiFernandes129857"
   )

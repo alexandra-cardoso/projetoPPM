@@ -2,6 +2,6 @@
 <project version="4">
   <component name="ScalaCompilerConfiguration">
     <option name="separateProdTestSources" value="true" />
-    <profile name="sbt 1" modules="projetoPPM,projetoPPM.main,projetoPPM.test,projetoppm_4806,projetoppm_4806.main,projetoppm_4806.test" />
+    <profile name="sbt 1" modules="JG1_AlexandraCardoso129865_JoanaCardoso129867_RuiFernandes129857,JG1_AlexandraCardoso129865_JoanaCardoso129867_RuiFernandes129857.main,JG1_AlexandraCardoso129865_JoanaCardoso129867_RuiFernandes129857.test,projetoPPM,projetoPPM.main,projetoPPM.main~1,projetoPPM.test,projetoPPM.test~1,projetoppm_4806,projetoppm_4806.main,projetoppm_4806.test" />
   </component>
 </project>
