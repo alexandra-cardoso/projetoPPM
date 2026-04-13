@@ -73,7 +73,7 @@ object Game {
 
     def initBoard(rows:Int,cols:Int): Game = {
         val tabuleiro = (0 until rows).toList.flatMap { r => //flatMap em vez de criar uma lista de listas cria um lista de 64 elementos (8por8)
-            // Para cada linha, criamos 0 a 7 (colunas)
+            // Para cada linha, criamos 0 a x colunas
             (0 until cols).map { c => //aqui crio colunas dentro de cada linha, aqui decidi map pq queremos extamente um par coordenada-> pedra
                 val stone = if ((r + c) % 2 == 0) Stone.White else Stone.Black
                 (r, c) -> stone
@@ -86,57 +86,70 @@ object Game {
 
 object KonaneGame extends App {
 
-        @tailrec
-        def gameLoop(state: Game, lstOpenCoords: List[Coord2D]): Unit = {
-            Game.render(state)
-            println(s"\nMensagem: ${state.message}")
+    @tailrec
+    def gameLoop(state: Game, lstOpenCoords: List[Coord2D]): Unit = {
+        Game.render(state)
+        println(s"\nMensagem: ${state.message}")
 
-            val pStr = if (state.currentPlayer == Stone.White) "Brancas" else "Pretas"
-            println(s"Vez de: $pStr")
+        val pStr = if (state.currentPlayer == Stone.White) "Brancas" else "Pretas"
+        println(s"Vez de: $pStr")
 
-            print("Origem (linha) ou q p/ sair: ")
+        print("Origem (linha) ou -1 p/ sair: ")
+        val l1 = readInt()
+        if (l1 == -1) return println("Fim de jogo!")
 
-            val l1 = readInt()
-            if (l1 == -1) return println("Fim de jogo!")
+        print("Origem (coluna): ")
+        val c1 = readInt()
+        print("Destino (linha): ")
+        val l2 = readInt()
+        print("Destino (coluna): ")
+        val c2 = readInt()
 
-            print("Origem (coluna): ")
-            val c1 = readInt()
-            print("Destino (linha): ")
-            val l2 = readInt()
-            print("Destino (coluna): ")
-            val c2 = readInt()
+        val starterStone = state.board.get((l1, c1))
 
-            val openCoords = Game.getOpenCoords(state.board, l1, c1, inicialEmpty)
-            val starterStone = state.board.get((l1, c1))
-            if (starterStone.contains(state.currentPlayer)) {
-                val (result, newList) = Logic.play(state.board, state.currentPlayer, (l1, c1), (l2, c2), lstOpenCoords)
+        if (starterStone.contains(state.currentPlayer)) {
+            val (res, newList) = Logic.play(state.board, state.currentPlayer, (l1, c1), (l2, c2), lstOpenCoords)
 
-                result match {
-                    case Some(newBoard) =>
-                        print(s"Última jogada: ($l1,$c1) para ($l2,$c2)")
-                        print(" Queres jogar novamente? s/n")
-                        val res = readLine()
-                        res match {
-                            case "s" => gameLoop(
-                                state.copy(board = newBoard, currentPlayer = state.currentPlayer, message = "jogada válida"),
-                                newList
-                            )
-                            case "n" =>  gameLoop(
-                                state.copy(board = newBoard, currentPlayer = Game.opponent(state.currentPlayer), message = "próximo jogador"),
-                                newList
-                            )
-                        }
-                    case None =>
-                        gameLoop(state.copy(message = "SALTO INVÁLIDO! Tenta outra vez."), lstOpenCoords)
-                }
-            } else {
-                gameLoop(state.copy(message = "Essa peça não é tua ou a casa está vazia!"), lstOpenCoords)
+            res match {
+                case Some(newBoard) =>
+                    println(s"\nÚltima jogada: ($l1,$c1) para ($l2,$c2)")
+                    val estadoAtualizado = state.copy(board = newBoard)
+                    Game.render(estadoAtualizado)
+                    print("\nQueres capturar novamente? s/n: ")
+                    val res = readLine()
+                    res match {
+                        case "s" => gameLoop(
+                            state.copy(board = newBoard, currentPlayer = state.currentPlayer, message = "Continua a capturar!"),
+                            newList
+                        )
+                        case "n" => gameLoop(
+                            state.copy(board = newBoard, currentPlayer = Game.opponent(state.currentPlayer), message = "Próximo jogador"),
+                            newList
+                        )
+                        case _ => gameLoop(
+                            state.copy(board = newBoard, currentPlayer = Game.opponent(state.currentPlayer), message = "Input inválido. Próximo jogador!"),
+                            newList
+                        )
+                    }
+                case None =>
+                    gameLoop(state.copy(message = "SALTO INVÁLIDO! Tenta outra vez."), lstOpenCoords)
             }
+        } else {
+            gameLoop(state.copy(message = "Essa peça não é tua ou a casa está vazia!"), lstOpenCoords)
         }
-        //  casas do meio (3,3) e (3,4) já estão vazias.
-        val inicialGame = Game.initBoard(8,8) //escolhemos seguir a figura 1 do enunciado do projeto, fazendo o tabuleiro ser 8 por 8.
-        val boardWithoutMiddle = inicialGame.board - (3, 3) - (3, 4)
-        val inicialEmpty = List((3, 3), (3, 4))
+    }
 
-        gameLoop(inicialGame.copy(board = boardWithoutMiddle), inicialEmpty)
+    println("Configuração do Tabuleiro Kōnane ")
+    print("Número de linhas/colunas (ex: 8): ")
+    val rows = readInt()
+    val cols = rows
+    val inicialGame = Game.initBoard(rows, cols)
+
+    val midR = rows / 2
+    val midC = cols / 2
+
+    val boardWithoutMiddle = inicialGame.board - (midR, midC) - (midR, midC - 1)
+    val inicialEmpty = List((midR, midC), (midR, midC - 1))
+
+    gameLoop(inicialGame.copy(board = boardWithoutMiddle), inicialEmpty)
 }

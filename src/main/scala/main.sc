@@ -29,7 +29,7 @@ object Main extends App {
 
     println(s"\n[T3] - O Computador ($jogadorAtual) vai tentar uma jogada aleatória...")
 
-    // Chamada da T3: Função de ordem superior que usa a T1 (randomMove)
+
     // O playRandomly devolve (Option[Board], MyRandom, List[Coord2D], Option[Coord2D])
     val (novoBoardOpt, novoRand, novaListaVazios, destinoEscolhido) = Logic.playRandomly(
         estadoPronto.board,
