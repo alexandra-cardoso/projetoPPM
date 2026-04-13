@@ -18,7 +18,7 @@ object Game {
     }
 
     @tailrec
-        def makeHeader(current:Int, max:Int): Unit = {
+        def makeHeader(current:Int, max:Int): Unit = { // faz a primeira linha do tabuleiro dinamicamente para acompanhar o tamanho definido pelo jogador
         (current < max) match {
             case true =>
                 (current == 0 ) match {
@@ -58,16 +58,16 @@ object Game {
     }
 
     @tailrec
-    def getOpenCoords(board: Board, r: Int, c: Int, acc: List[Coord2D]): List[Coord2D] = {
+    def getOpenCoords(game: Game, r: Int, c: Int, acc: List[Coord2D]): List[Coord2D] = {
         (r, c) match {
-            case (8, 0) => acc // Fim
-            case (r, 8) => getOpenCoords(board, r + 1, 0, acc) // Salta linha
-            case (r, c) =>
-                val newAcc = board.get((r, c)) match {
-                    case None => (r, c) :: acc // Se está vazio, adiciona
+            case (row, 0) if row == game.rows => acc // Fim
+            case (row, col) if col == game.cols => getOpenCoords(game, row + 1, 0, acc) // Salta linha
+            case (row, col) =>
+                val newAcc = game.board.get((row, col)) match {
+                    case None => (row, col) :: acc // Se está vazio, adiciona
                     case _ => acc
                 }
-                getOpenCoords(board, r, c + 1, newAcc)
+                getOpenCoords(game, row, col + 1, newAcc)
         }
     }
 
