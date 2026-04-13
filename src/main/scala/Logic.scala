@@ -30,7 +30,29 @@ object Logic {
                      f: (List[Coord2D], MyRandom) => (Coord2D, MyRandom))
     : (Option[Board], MyRandom, List[Coord2D], Option[Coord2D]) = {
 
-        // Criamos uma função auxiliar recursiva aqui dentro!
+        @tailrec
+        def contarLinhas(r: Int): Int = {
+            board.get((r, 0)) match {
+                case Some(_) => contarLinhas(r + 1) // Tem peça, continua a descer
+                case None =>
+                    if (lstOpenCoords.contains((r, 0))) contarLinhas(r + 1) // É um buraco válido, continua a descer
+                    else r
+            }
+        }
+
+        @tailrec
+        def contarColunas(c: Int): Int = {
+            board.get((0, c)) match {
+                case Some(_) => contarColunas(c + 1) // Tem peça, continua para a direita
+                case None =>
+                    if (lstOpenCoords.contains((0, c))) contarColunas(c + 1) // É um buraco válido, continua
+                    else c
+            }
+        }
+
+        val rows = contarLinhas(0)
+        val cols = contarColunas(0)
+
         @tailrec
         def tentarJogar(currentRand: MyRandom, buracosATestar: List[Coord2D]): (Option[Board], MyRandom, List[Coord2D], Option[Coord2D]) = {
 
@@ -38,21 +60,15 @@ object Logic {
             if (buracosATestar.isEmpty) {
                 return (None, currentRand, lstOpenCoords, None)
             }
-
-            // 1. Obtemos a coordenada de destino à sorte a partir da lista TEMPORÁRIA
             val (coordTo, nextRand) = f(buracosATestar, currentRand)
-
-            // 2. Tentamos encontrar uma peça que consiga saltar para lá
-            val coordFromOpt = findValidCoordFrom(board, player, coordTo)
+            val coordFromOpt = findValidCoordFrom(board,rows,cols, player, coordTo)
 
             coordFromOpt match {
                 case Some(coordFrom) =>
-                    // SUCESSO! Passamos a lista ORIGINAL (lstOpenCoords) para o Logic.play
                     val resultadoJogada = Logic.play(board, player, coordFrom, coordTo, lstOpenCoords)
                     (resultadoJogada._1, nextRand, resultadoJogada._2, Some(coordTo))
 
                 case None =>
-                    // FALHOU! Tiramos este buraco da lista temporária e tentamos de novo
                     val restantes = buracosATestar.filterNot(_ == coordTo)
                     tentarJogar(nextRand, restantes)
             }
@@ -61,7 +77,7 @@ object Logic {
         tentarJogar(r, lstOpenCoords)
     }
 
-    def findValidCoordFrom(board: Board, player: Stone, targetTo: Coord2D): Option[Coord2D] = {
+    def findValidCoordFrom(board: Board,rows:Int, cols:Int, player: Stone, targetTo: Coord2D): Option[Coord2D] = {
         val opponent = if (player == Stone.Black) Stone.White else Stone.Black
 
         val options = List(
@@ -75,8 +91,7 @@ object Logic {
         def checkCoords(coords: List[Coord2D]): Option[Coord2D] = coords match {
             case Nil => None
             case coord :: tail =>
-                val valid = coord._1 >= 0 && coord._1 < 8 && coord._2 >= 0 && coord._2 < 8
-
+                val valid = coord._1 >= 0 && coord._1 < rows && coord._2 >= 0 && coord._2 < cols
                 if (valid) {
                     val middle = ((coord._1 + targetTo._1) / 2, (coord._2 + targetTo._2) / 2)
                     (board.get(coord), board.get(middle)) match {
@@ -92,13 +107,8 @@ object Logic {
     }
 
     def randomMove(lstOpenCoords: List[Coord2D], rand: MyRandom): (Coord2D, MyRandom) = {
-        // Garanto que a lista tem elementos
-        require(lstOpenCoords.nonEmpty, "A lista de coordenadas livres não pode estar vazia")
-
         // Gerar um índice aleatório entre 0 e o tamanho da lista - 1
         val (index, nextRand) = rand.nextInt(lstOpenCoords.length)
-
-
         // para garantir que devolvemos um MyRandom
         val nextMyRandom = nextRand match {
             case mr: MyRandom => mr

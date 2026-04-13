@@ -47,7 +47,10 @@ object Game {
                 println("|")
                 draw(game, r + 1, 0) // desenha o board até aí e recomeça na linha asseguir recursivamente
             case (row, col) => //caso não se saiba nenhum dos valores
-                if (c == 0) print(s"$row |") // se a coluna for a de índice 0 ou seja inicio da linha ele imprime o número da linha + a |
+                (col == 0) match {
+                    case true => print(s"$row |")
+                    case false => ()
+                }// se a coluna for a de índice 0 ou seja inicio da linha ele imprime o número da linha + a |
                 game.board.get((row, col)) match {
                     case Some(Stone.Black) => print(" B ")
                     case Some(Stone.White) => print(" W ")
