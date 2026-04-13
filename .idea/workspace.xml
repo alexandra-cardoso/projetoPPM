@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f66ae5e7-d17a-41c8-bc77-636717c0d1f6" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_27_03_2026,_17_47_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_27_03_2026__17_47__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/RandomMove.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/RandomMove.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/T3.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/T3.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/main.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/main.scala" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -52,6 +50,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.KonaneGame.executor": "Run",
+    "Application.main.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
@@ -97,7 +96,7 @@
       <option name="presentableId" value="Default" />
       <updated>1774347434143</updated>
       <workItem from="1774517726620" duration="10151000" />
-      <workItem from="1776095213645" duration="489000" />
+      <workItem from="1776095213645" duration="1365000" />
     </task>
     <servers />
   </component>
