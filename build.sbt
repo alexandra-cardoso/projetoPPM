@@ -8,3 +8,7 @@ lazy val root = (project in file("."))
   .settings(
     name := "JG1_AlexandraCardoso129865_JoanaCardoso129867_RuiFernandes129857"
   )
+
+libraryDependencies += "org.openjfx" % "javafx-base" % "25.0.2"
+libraryDependencies += "org.openjfx" % "javafx-controls" % "25.0.2"
+libraryDependencies += "org.openjfx" % "javafx-fxml" % "25.0.2"

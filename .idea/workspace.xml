@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f66ae5e7-d17a-41c8-bc77-636717c0d1f6" name="Changes" comment="main corrigido">
+      <change afterPath="$PROJECT_DIR$/src/main/scala/Controller.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/scala/Controller.scala" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/scala/HelloWorld.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/sbt.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sbt.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/scala_compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/scala_compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.sbt" beforeDir="false" afterPath="$PROJECT_DIR$/build.sbt" afterDir="false" />
     </list>
@@ -52,6 +54,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.KonaneGame (1).executor": "Run",
     "Application.KonaneGame.executor": "Run",
     "Application.main.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
@@ -63,21 +66,17 @@
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/alexa/IdeaProjects/JG1_AlexandraCardoso129865_JoanaCardoso129867_RuiFernandes129857/build.sbt",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.sourceCode.Scala",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "preferences.JavaFX",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="Application.KonaneGame">
-    <configuration name="KonaneGame" type="Application" factoryName="Application" temporary="true">
+  <component name="RunManager">
+    <configuration name="KonaneGame (1)" type="Application" factoryName="Application" temporary="true">
       <option name="MAIN_CLASS_NAME" value="KonaneGame" />
-      <module name="projetoPPM.main" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="main" type="Application" factoryName="Application" temporary="true">
-      <option name="MAIN_CLASS_NAME" value="main" />
-      <module name="projetoPPM.main" />
+      <module name="JG1_AlexandraCardoso129865_JoanaCardoso129867_RuiFernandes129857.main" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -95,8 +94,7 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.KonaneGame" />
-        <item itemvalue="Application.main" />
+        <item itemvalue="Application.KonaneGame (1)" />
       </list>
     </recent_temporary>
   </component>
@@ -118,7 +116,7 @@
       <option name="presentableId" value="Default" />
       <updated>1774347434143</updated>
       <workItem from="1774517726620" duration="10151000" />
-      <workItem from="1776095213645" duration="8647000" />
+      <workItem from="1776095213645" duration="11459000" />
     </task>
     <task id="LOCAL-00001" summary="CENAS">
       <option name="closed" value="true" />
@@ -144,7 +142,15 @@
       <option name="project" value="LOCAL" />
       <updated>1776109742878</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="ACABOU">
+      <option name="closed" value="true" />
+      <created>1776111390339</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1776111390339</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -154,6 +160,11 @@
     <MESSAGE value="CENAS" />
     <MESSAGE value="MERDAS" />
     <MESSAGE value="MERDAS2" />
-    <option name="LAST_COMMIT_MESSAGE" value="MERDAS2" />
+    <MESSAGE value="ACABOU" />
+    <option name="LAST_COMMIT_MESSAGE" value="ACABOU" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>
