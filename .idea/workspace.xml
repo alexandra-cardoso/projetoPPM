@@ -4,13 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f66ae5e7-d17a-41c8-bc77-636717c0d1f6" name="Changes" comment="main corrigido">
-      <change afterPath="$PROJECT_DIR$/src/main/scala/Controller.fxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/scala/Controller.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/scala/HelloWorld.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sbt.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sbt.xml" afterDir="false" />
+    <list default="true" id="f66ae5e7-d17a-41c8-bc77-636717c0d1f6" name="Changes" comment="acrescentei métodos, javafx e scenebuilder, falat mudar os vm arguments para quando forem correr">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.sbt" beforeDir="false" afterPath="$PROJECT_DIR$/build.sbt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/Controller.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/Controller.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -116,7 +112,7 @@
       <option name="presentableId" value="Default" />
       <updated>1774347434143</updated>
       <workItem from="1774517726620" duration="10151000" />
-      <workItem from="1776095213645" duration="11459000" />
+      <workItem from="1776095213645" duration="12944000" />
     </task>
     <task id="LOCAL-00001" summary="CENAS">
       <option name="closed" value="true" />
@@ -150,7 +146,15 @@
       <option name="project" value="LOCAL" />
       <updated>1776111390339</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="acrescentei métodos, javafx e scenebuilder, falat mudar os vm arguments para quando forem correr">
+      <option name="closed" value="true" />
+      <created>1776942114198</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1776942114198</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -161,7 +165,8 @@
     <MESSAGE value="MERDAS" />
     <MESSAGE value="MERDAS2" />
     <MESSAGE value="ACABOU" />
-    <option name="LAST_COMMIT_MESSAGE" value="ACABOU" />
+    <MESSAGE value="acrescentei métodos, javafx e scenebuilder, falat mudar os vm arguments para quando forem correr" />
+    <option name="LAST_COMMIT_MESSAGE" value="acrescentei métodos, javafx e scenebuilder, falat mudar os vm arguments para quando forem correr" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
