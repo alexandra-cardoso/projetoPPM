@@ -7,8 +7,8 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="C:\Users\alexa\IdeaProjects\JG1_AlexandraCardoso129865_JoanaCardoso129867_RuiFernandes129857" />
-            <option value="C:\Users\alexa\IdeaProjects\JG1_AlexandraCardoso129865_JoanaCardoso129867_RuiFernandes129857\project" />
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/project" />
           </set>
         </option>
         <option name="sbtVersion" value="1.12.6" />
