@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f66ae5e7-d17a-41c8-bc77-636717c0d1f6" name="Changes" comment="main corrigido">
-      <change beforePath="$PROJECT_DIR$/.idea/sbt.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sbt.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/scala_compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/scala_compiler.xml" afterDir="false" />
+    <list default="true" id="f66ae5e7-d17a-41c8-bc77-636717c0d1f6" name="Changes" comment="tudo ok em principio">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.sbt" beforeDir="false" afterPath="$PROJECT_DIR$/build.sbt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/Game.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/Game.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/Logic.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/Logic.scala" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,21 +62,17 @@
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/alexa/IdeaProjects/JG1_AlexandraCardoso129865_JoanaCardoso129867_RuiFernandes129857/build.sbt",
     "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "SDKs",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
     "settings.editor.selected.configurable": "preferences.sourceCode.Scala",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="Application.KonaneGame">
+  <component name="RunManager">
     <configuration name="KonaneGame" type="Application" factoryName="Application" temporary="true">
       <option name="MAIN_CLASS_NAME" value="KonaneGame" />
-      <module name="projetoPPM.main" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="main" type="Application" factoryName="Application" temporary="true">
-      <option name="MAIN_CLASS_NAME" value="main" />
-      <module name="projetoPPM.main" />
+      <module name="JG1_AlexandraCardoso129865_JoanaCardoso129867_RuiFernandes129857" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -96,7 +91,6 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.KonaneGame" />
-        <item itemvalue="Application.main" />
       </list>
     </recent_temporary>
   </component>
@@ -144,7 +138,15 @@
       <option name="project" value="LOCAL" />
       <updated>1776109742878</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="tudo ok em principio">
+      <option name="closed" value="true" />
+      <created>1776111996339</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1776111996340</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -154,6 +156,7 @@
     <MESSAGE value="CENAS" />
     <MESSAGE value="MERDAS" />
     <MESSAGE value="MERDAS2" />
-    <option name="LAST_COMMIT_MESSAGE" value="MERDAS2" />
+    <MESSAGE value="tudo ok em principio" />
+    <option name="LAST_COMMIT_MESSAGE" value="tudo ok em principio" />
   </component>
 </project>

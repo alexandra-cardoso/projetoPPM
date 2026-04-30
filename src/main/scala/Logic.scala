@@ -25,10 +25,7 @@ object Logic {
 
     }
 
-    def playRandomly(board: Board,
-                     r: MyRandom, player: Stone, lstOpenCoords: List[Coord2D],
-                     f: (List[Coord2D], MyRandom) => (Coord2D, MyRandom))
-    : (Option[Board], MyRandom, List[Coord2D], Option[Coord2D]) = {
+    def playRandomly(board: Board, r: MyRandom, player: Stone, lstOpenCoords: List[Coord2D], f: (List[Coord2D], MyRandom) => (Coord2D, MyRandom)): (Option[Board], MyRandom, List[Coord2D], Option[Coord2D]) = {
 
         @tailrec
         def contarLinhas(r: Int): Int = {
@@ -60,17 +57,17 @@ object Logic {
             if (buracosATestar.isEmpty) {
                 return (None, currentRand, lstOpenCoords, None)
             }
-            val (coordTo, nextRand) = f(buracosATestar, currentRand)
-            val coordFromOpt = findValidCoordFrom(board,rows,cols, player, coordTo)
+            val (coordTo, nextRand) = f(buracosATestar, currentRand) //usamos a função RandomMove basicamente, para descobrir, nesta lista de buracos, um aleatório
+            val coordFromOpt = findValidCoordFrom(board,rows,cols, player, coordTo) //usamos uma função auxiliar para ver se o buraco dado é jogável
 
             coordFromOpt match {
-                case Some(coordFrom) =>
-                    val resultadoJogada = Logic.play(board, player, coordFrom, coordTo, lstOpenCoords)
-                    (resultadoJogada._1, nextRand, resultadoJogada._2, Some(coordTo))
+                case Some(coordFrom) => //temos sucesso (retorno da fç auxiliar é um Option ent se houver Some, temos casa pra onde ir)
+                    val resultadoJogada = Logic.play(board, player, coordFrom, coordTo, lstOpenCoords) //fazemos a jogada
+                    (resultadoJogada._1, nextRand, resultadoJogada._2, Some(coordTo)) //retornamos o novo tabuleiro, a lista de buracos atualizada e para onde jogámos (e o myRand mas isso é pra irmos guardando os estados deste objeto)
 
-                case None =>
-                    val restantes = buracosATestar.filterNot(_ == coordTo)
-                    tentarJogar(nextRand, restantes)
+                case None => //não dava pra jogar pra este buraco aleatório
+                    val restantes = buracosATestar.filterNot(_ == coordTo) //tiramos da lista de buracos
+                    tentarJogar(nextRand, restantes) //vamos tentar outra vez
             }
         }
 

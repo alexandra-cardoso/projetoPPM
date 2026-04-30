@@ -151,8 +151,8 @@ object KonaneGame extends App {
     val midR = rows / 2
     val midC = cols / 2
 
-    val boardWithoutMiddle = inicialGame.board - (midR, midC) - (midR, midC - 1)
+    val boardWithoutMiddle = inicialGame.board - (midR, midC) - (midR, midC - 1) //tiramos as coords do meio
     val inicialEmpty = List((midR, midC), (midR, midC - 1))
 
-    gameLoop(inicialGame.copy(board = boardWithoutMiddle), inicialEmpty)
+    gameLoop(inicialGame.copy(board = boardWithoutMiddle), inicialEmpty) //copy para manter a imutabilidade dos objetos: cria se uma nova instancia com estas alterações e n se modifica o que já existia
 }
