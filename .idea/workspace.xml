@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f66ae5e7-d17a-41c8-bc77-636717c0d1f6" name="Changes" comment="meti a cena de voltar an ogra a funcionar, a ideia é, só aparece a possibilidade de voltar a jogar caso exista uma posição possível para isso, se não der nunca aparece a opção de voltar a jogar">
-      <change afterPath="$PROJECT_DIR$/src/main/scala/MenuController.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/scala/menu.fxml" afterDir="false" />
+    <list default="true" id="f66ae5e7-d17a-41c8-bc77-636717c0d1f6" name="Changes" comment="criei um menu de entrada! pergunta se queremos entrar no jogo antes de começar (enunciado diz que d\ao pontos pela criatividade)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/Controller.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/Controller.scala" afterDir="false" />
     </list>
@@ -140,7 +138,7 @@
       <workItem from="1774517726620" duration="10151000" />
       <workItem from="1776095213645" duration="14308000" />
       <workItem from="1777821982877" duration="195000" />
-      <workItem from="1777988369667" duration="10218000" />
+      <workItem from="1777988369667" duration="10910000" />
     </task>
     <task id="LOCAL-00001" summary="CENAS">
       <option name="closed" value="true" />
@@ -222,7 +220,15 @@
       <option name="project" value="LOCAL" />
       <updated>1777995319441</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="criei um menu de entrada! pergunta se queremos entrar no jogo antes de começar (enunciado diz que d\ao pontos pela criatividade)">
+      <option name="closed" value="true" />
+      <created>1777999153586</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1777999153587</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -239,7 +245,8 @@
     <MESSAGE value="Falat meter a captura seguida a funcionar e testar o IA, já fiz a coisa de escolher do centro ou dos cantos ao ínicio.Também to com um stresse de quando carrego duas vezes na msm peça ele ta a finalizar o turno em vez de deselecionar" />
     <MESSAGE value="meti a cena de deselecionar a funcionar" />
     <MESSAGE value="meti a cena de voltar an ogra a funcionar, a ideia é, só aparece a possibilidade de voltar a jogar caso exista uma posição possível para isso, se não der nunca aparece a opção de voltar a jogar" />
-    <option name="LAST_COMMIT_MESSAGE" value="meti a cena de voltar an ogra a funcionar, a ideia é, só aparece a possibilidade de voltar a jogar caso exista uma posição possível para isso, se não der nunca aparece a opção de voltar a jogar" />
+    <MESSAGE value="criei um menu de entrada! pergunta se queremos entrar no jogo antes de começar (enunciado diz que d\ao pontos pela criatividade)" />
+    <option name="LAST_COMMIT_MESSAGE" value="criei um menu de entrada! pergunta se queremos entrar no jogo antes de começar (enunciado diz que d\ao pontos pela criatividade)" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

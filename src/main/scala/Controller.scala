@@ -22,7 +22,7 @@ class Controller {
     var currentPlayer: Stone = Stone.Black //começam as peças pretas
     var selectedCoord: Option[Coord2D] = None //ao ínicio n\ao existe nenhuma peça selecionada
 
-    // Variável para a Tarefa T1/T3: gerador de números aleatórios puro
+    // Variável para a Tarefa T1/T3
     var currentRand: MyRandom = MyRandom(System.currentTimeMillis())
 
     @FXML
@@ -40,9 +40,9 @@ class Controller {
         }
         btnRestart.setOnAction(_ => iniciarNovoJogo())// Configuro os botões, neste caso o botão com o id btn.Restart chama o metodo iniciarNovoJogo()
 
-        // Adicionei a funcionalidade ao botão Undo para servir de gatilho para a IA (Tarefa T3)
-        btnUndo.setText("Jogada IA")
-        btnUndo.setOnAction(_ => fazerJogadaIA())
+        // neste momento o botão undo chama-se Jogar Random, quando o rui fizer o undo acrescento outro botão para a jogada random fácil
+        btnUndo.setText("Jogar Random")
+        btnUndo.setOnAction(_ => fazerJogadaRandom())
 
         iniciarNovoJogo()// Arranca o jogo
     }
@@ -91,70 +91,82 @@ class Controller {
         val c = id.charAt(5).asDigit
         val clickedCoord = (r, c)
 
-        // FASE DE REMOÇÃO INICIAL (Tarefa T8 - Usabilidade)[cite: 1]
-        if (currentOpenCoords.isEmpty) { // Se não há buracos, Preto remove Centro ou Canto
-            if (isCenterOrCorner(clickedCoord) && currentBoard.get(clickedCoord).contains(Stone.Black)) {
-                removerPecaInicial(clickedCoord)
-                lblStatus.setText("Brancas: tirem uma peça adjacente.")
-            } else lblStatus.setText("Inválido! Escolhe Centro ou Canto (Preto).")
-            return
-        }
-
-        if (currentOpenCoords.length == 1) { // Branco remove adjacente à primeira
-            if (isAdjacent(clickedCoord, currentOpenCoords.head) && currentBoard.get(clickedCoord).contains(Stone.White)) {
-                removerPecaInicial(clickedCoord)
-                lblStatus.setText("Jogo normal! Vez das Pretas.")
-            } else lblStatus.setText("Inválido! Escolhe uma peça branca adjacente.")
-            return
-        }
-
-        // JOGO NORMAL (Saltos)
-        selectedCoord match { //ao carregar na peça de origem é o que a torna vede no fundo
-            case None => //caso não exista nenhuma peça selecionada de origem
-                currentBoard.get(clickedCoord) match { //vamos pegar na célula em que o jogador carregou
-                    case Some(stone) if stone == currentPlayer => //se for do jogador atual
-                        selectedCoord = Some(clickedCoord) // a selected coord passa a ser a peça em que se carregou
-                        source.setStyle("-fx-background-color: rgba(0, 255, 0, 0.4); -fx-border-color: #cccccc;")//colocamos o fundo a verde
-                        lblStatus.setText(s"Peça $clickedCoord selecionada. Escolhe o destino.") //coloca esta mensagem no painel de jogo
-
-                    case Some(_) => //caso a peça que selecionada para jogar seja do adversário, enviamos uma mensagem a avisar o jogador
-                        lblStatus.setText("Esta peça é do teu adversário!")
-
-                    case None => //caso o jogador selecione um painel que não contenha uma peça, enviamos uma mensagem avisar disso
-                        lblStatus.setText("Casa vazia! Escolhe uma peça tua para mover.")
+        // remove-se as peças iniciais
+        currentOpenCoords match {
+            case Nil => // Caso a lista de coordenadas vazia esteja vazia (1ª peça das Pretas)
+                if (isCenterOrCorner(clickedCoord) && currentBoard.get(clickedCoord).contains(Stone.Black)) {
+                    removerPecaInicial(clickedCoord)
+                    lblStatus.setText("Brancas: tirem uma peça adjacente.")
+                } else {
+                    lblStatus.setText("Inválido! Escolhe Centro ou Canto (Preto).")
                 }
+                return
 
-            case Some(fromCoord) => //caso esteja a carregar numa coordenada de origem que já estava selecionada como coordenada de origem
-                if (clickedCoord == fromCoord) { //caso a coordenada carregada coreresponda a uma coordenada que já foi definida como a de origem
-                    // CORREÇÃO: Ao clicar na própria peça durante uma captura múltipla, o turno deve acabar[cite: 1]
-                    finalizarTurno()
-                } else { // se carreguei numa outra coordenada, posso fazer  a jogada
-                    val (optBoard, newOpenCoords) = Logic.play(
-                        currentBoard, currentPlayer, fromCoord, clickedCoord, currentOpenCoords //chamo a lógica do play feita na primeira parte do trabaho[cite: 3]
-                    )
-                    optBoard match {
-                        case Some(newBoard) => //caso a jogada tenha sido válida
-                            currentBoard = newBoard //criamos um novo tabuleiro, para retirar as peças da posição em que estavam
-                            currentOpenCoords = newOpenCoords //atualiza a lista de posições vazias
+            case firstRemoved :: Nil => // Caso exista apenas uma coordenada na lista (2ª peça das Brancas)[cite: 1]
+                if (isAdjacent(clickedCoord, firstRemoved) && currentBoard.get(clickedCoord).contains(Stone.White)) {
+                    removerPecaInicial(clickedCoord)
+                    lblStatus.setText("Jogo normal! Vez das Pretas.")
+                } else {
+                    lblStatus.setText("Inválido! Escolhe uma peça branca adjacente.")
+                }
+                return
 
-                            // Verifica se pode saltar novamente com a MESMA peça
-                            if (podeSaltarMais(newBoard, clickedCoord, currentPlayer)) {
-                                selectedCoord = Some(clickedCoord) // Mantém a peça selecionada no novo lugar
-                                renderBoard()
-                                destacarCelula(clickedCoord, "rgba(255, 255, 0, 0.4)") // Amarelo para indicar que pode continuar[cite: 1]
-                                lblStatus.setText("Captura múltipla! Continua ou clica na peça para terminar.")
-                            } else {
-                                finalizarTurno()
+            case _ => // Jogo normal
+                selectedCoord match { //ao carregar na peça de origem é o que a torna vede no fundo
+                    case None => //caso não exista nenhuma peça selecionada de origem
+                        currentBoard.get(clickedCoord) match { //vamos pegar na célula em que o jogador carregou
+                            case Some(stone) if stone == currentPlayer => //se for do jogador atual
+                                selectedCoord = Some(clickedCoord) // a selected coord passa a ser a peça em que se carregou
+                                source.setStyle("-fx-background-color: rgba(0, 255, 0, 0.4); -fx-border-color: #cccccc;") //colocamos o fundo a verde
+                                lblStatus.setText(s"Peça $clickedCoord selecionada. Escolhe o destino.") //coloca esta mensagem no painel de jogo
+
+                                // NOVO: Mostrar destinos válidos a vermelho (Tarefa T8)[cite: 1]
+                                val destinos = obterDestinosValidos(clickedCoord, currentPlayer, currentBoard)
+                                destinos.foreach(d => destacarCelula(d, "rgba(255, 0, 0, 0.4)"))
+
+                            case Some(_) => //caso a peça que selecionada para jogar seja do adversário, enviamos uma mensagem a avisar o jogador
+                                lblStatus.setText("Esta peça é do teu adversário!")
+
+                            case None => //caso o jogador selecione um painel que não contenha uma peça, enviamos uma mensagem avisar disso
+                                lblStatus.setText("Casa vazia! Escolhe uma peça tua para mover.")
+                        }
+
+                    case Some(fromCoord) => //caso esteja a carregar numa coordenada de origem que já estava selecionada como coordenada de origem
+                        if (clickedCoord == fromCoord) { //caso a coordenada carregada coreresponda a uma coordenada que já foi definida como a de origem
+                            selectedCoord=None
+                            renderBoard()
+                        } else { // se carreguei numa outra coordenada, posso fazer  a jogada
+                            val (optBoard, newOpenCoords) = Logic.play(
+                                currentBoard, currentPlayer, fromCoord, clickedCoord, currentOpenCoords //chamo a lógica do play feita na primeira parte do trabaho[cite: 3]
+                            )
+                            optBoard match {
+                                case Some(newBoard) => //caso a jogada tenha sido válida
+                                    currentBoard = newBoard //criamos um novo tabuleiro, para retirar as peças da posição em que estavam
+                                    currentOpenCoords = newOpenCoords //atualiza a lista de posições vazias
+
+                                    // LÓGICA DE CAPTURA MÚLTIPLA: Verifica se pode saltar novamente com a MESMA peça[cite: 1, 4]
+                                    if (podeSaltarMais(newBoard, clickedCoord, currentPlayer)) {
+                                        selectedCoord = Some(clickedCoord) // Mantém a peça selecionada no novo lugar
+                                        renderBoard()
+                                        destacarCelula(clickedCoord, "rgba(255, 255, 0, 0.4)") // Amarelo para indicar que pode continuar[cite: 1]
+
+                                        val proximosDestinos = obterDestinosValidos(clickedCoord, currentPlayer, newBoard)
+                                        proximosDestinos.foreach(d => destacarCelula(d, "rgba(255, 0, 0, 0.4)"))
+
+                                        lblStatus.setText("Captura múltipla! Continua ou clica na peça para terminar.")
+                                    } else {
+                                        finalizarTurno()
+                                    }
+
+                                case None => //caso o play não ocorra com sucesso (logo não devolve nenhum tabuleiro)
+                                    lblStatus.setText("Salto inválido! Escolhe novamente.") //enviamos uma mensagem de erro para o jogador
+                                    // Se não houver salto múltiplo disponível, limpamos a seleção
+                                    if (!podeSaltarMais(currentBoard, fromCoord, currentPlayer)) {
+                                        selectedCoord = None
+                                        renderBoard()
+                                    }
                             }
-
-                        case None => //caso o play não ocorra com sucesso (logo não devolve nenhum tabuleiro)
-                            lblStatus.setText("Salto inválido! Escolhe novamente.") //enviamos uma mensagem de erro para o jogador
-                            // Se estivermos em captura múltipla, não limpamos a seleção para o jogador tentar outro salto válido com a mesma peça[cite: 1]
-                            if (!podeSaltarMais(currentBoard, fromCoord, currentPlayer)) {
-                                selectedCoord = None
-                                renderBoard()
-                            }
-                    }
+                        }
                 }
         }
     }
@@ -173,7 +185,20 @@ class Controller {
         renderBoard()
     }
 
-    def fazerJogadaIA(): Unit = { // Implementa a Tarefa T3 usando a tua lógica funcional
+    def obterDestinosValidos(pos: Coord2D, p: Stone, board: Board): List[Coord2D] = {
+        val directions = List((2, 0), (-2, 0), (0, 2), (0, -2))
+        directions.flatMap { case (dr, dc) =>
+            val target = (pos._1 + dr, pos._2 + dc)
+            val mid = (pos._1 + dr / 2, pos._2 + dc / 2)
+
+            val dentro = target._1 >= 0 && target._1 < ROWS && target._2 >= 0 && target._2 < COLS
+            if (dentro && !board.contains(target) && board.get(mid).exists(_ != p)) {
+                Some(target) // Destino válido encontrado[cite: 3, 4]
+            } else None
+        }
+    }
+
+    def fazerJogadaRandom(): Unit = { // Implementa a Tarefa T3 usando a tua lógica funcional
         // Função interna recursiva para permitir que a IA realize saltos múltiplos
         def realizarMovimentosIA(board: Board, rand: MyRandom, open: List[Coord2D], lastTo: Option[Coord2D]): Unit = {
             val (optBoard, nextRand, newList, coordTo) = lastTo match {
