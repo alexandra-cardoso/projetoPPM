@@ -4,17 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f66ae5e7-d17a-41c8-bc77-636717c0d1f6" name="Changes" comment="fiz grelha no scene builder">
-      <change afterPath="$PROJECT_DIR$/src/main/scala/FxApp.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/scala/Main.scala" afterDir="false" />
+    <list default="true" id="f66ae5e7-d17a-41c8-bc77-636717c0d1f6" name="Changes" comment="Fiz particamente o JavaFX todo, to a continuar a meter comentários e a pensar no que falta">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/Controller.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Controller.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/Controller.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/Controller.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/Game.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/Game.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/HelloWorld.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/HelloWorld.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/Logic.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/Logic.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/MyRandom.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/MyRandom.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/style.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -146,7 +138,7 @@
       <workItem from="1774517726620" duration="10151000" />
       <workItem from="1776095213645" duration="14308000" />
       <workItem from="1777821982877" duration="195000" />
-      <workItem from="1777988369667" duration="5024000" />
+      <workItem from="1777988369667" duration="6417000" />
     </task>
     <task id="LOCAL-00001" summary="CENAS">
       <option name="closed" value="true" />
@@ -196,7 +188,15 @@
       <option name="project" value="LOCAL" />
       <updated>1776944682290</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Fiz particamente o JavaFX todo, to a continuar a meter comentários e a pensar no que falta">
+      <option name="closed" value="true" />
+      <created>1777993668624</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1777993668624</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -209,7 +209,8 @@
     <MESSAGE value="ACABOU" />
     <MESSAGE value="acrescentei métodos, javafx e scenebuilder, falat mudar os vm arguments para quando forem correr" />
     <MESSAGE value="fiz grelha no scene builder" />
-    <option name="LAST_COMMIT_MESSAGE" value="fiz grelha no scene builder" />
+    <MESSAGE value="Fiz particamente o JavaFX todo, to a continuar a meter comentários e a pensar no que falta" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fiz particamente o JavaFX todo, to a continuar a meter comentários e a pensar no que falta" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

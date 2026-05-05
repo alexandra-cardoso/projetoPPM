@@ -22,6 +22,9 @@ class Controller {
     var currentPlayer: Stone = Stone.Black //começam as peças pretas
     var selectedCoord: Option[Coord2D] = None //ao ínicio n\ao existe nenhuma peça selecionada
 
+    // Variável para a Tarefa T1/T3: gerador de números aleatórios puro[cite: 4, 5]
+    var currentRand: MyRandom = MyRandom(System.currentTimeMillis())
+
     @FXML
     def initialize(): Unit = {//este metodo serve para mapear os paines colocados no scenebuilder pelo seu ID de forma a poder inicializar o tabuleiro
         boardGrid.getChildren.forEach { node => //no fxml, cada painel foi identificado da forma cellRC (R=Row,C=Col)
@@ -36,31 +39,33 @@ class Controller {
             }
         }
         btnRestart.setOnAction(_ => iniciarNovoJogo())// Configuro os botões, neste caso o botão com o id btn.Restart chama o metodo iniciarNovoJogo()
+
+        // Adicionei a funcionalidade ao botão Undo para servir de gatilho para a IA (Tarefa T3)[cite: 1, 4]
+        btnUndo.setText("Jogada IA")
+        btnUndo.setOnAction(_ => fazerJogadaIA())
+
         iniciarNovoJogo()// Arranca o jogo
     }
 
     def iniciarNovoJogo(): Unit = { //metodo que inicia o tabuleiro e arrnaca o jogo
 
-        val inicialGame = Game.initBoard(ROWS, COLS) // Usamos a função Game.initBoard feita na primeira parte do trabalho PROVAVALEMENTE VAI MUDAR PARA O FICHIERO LOGIC COMO DICA DO PROF
+        val inicialGame = Game.initBoard(ROWS, COLS) // Usamos a função Game.initBoard feita na primeira parte do trabalho PROVAVALEMENTE VAI MUDAR PARA O FICHIERO LOGIC COMO DICA DO PROF[cite: 2]
 
-        // Posições  DAS PEDRAS DO CENTRO, FALTA FAZER A ESCOLHA DE TIRAR DAS PONTAS!
-        val midR = ROWS / 2
-        val midC = COLS / 2
-
-        currentBoard = inicialGame.board - (midR, midC) - (midR, midC - 1) //Aqui é onde tiramos as peças mesmo do tabuleiro, tiramos a peça do meio, e a à direita da do meio
-        currentOpenCoords = List((midR, midC), (midR, midC - 1))//atualiza a lista de posições livres para ser as posições do meio de onde retirámos as peças
+        // Para permitir a escolha de tirar das pontas ou centro, o tabuleiro começa CHEIO[cite: 1]
+        currentBoard = inicialGame.board
+        currentOpenCoords = List()//atualiza a lista de posições livres para ser as posições do meio de onde retirámos as peças
         currentPlayer = Stone.Black //começa as peças pretas
         selectedCoord = None //ao ínicio nenhuma peça está selecionada
 
         renderBoard() //chama a função que "desenha" o visual do tabuleiro
-        lblStatus.setText("Jogo iniciado! Vez das Pretas.")
+        lblStatus.setText("Jogo iniciado! Pretas: tirem uma peça do Centro ou Canto.")
     }
 
     // Função que atualiza o lado visual
     def renderBoard(): Unit = {
         cells.foreach { case (coord, pane) =>
             pane.getChildren.clear() //retiro qualquer coisa que possa estar naquele painel ao ínicio do jogo
-            pane.setStyle("-fx-border-color: #cccccc;") // cira uma borda subtil para vermos as grelhas
+            pane.setStyle("-fx-border-color: #cccccc; -fx-background-color: transparent;") // cira uma borda subtil para vermos as grelhas
 
             currentBoard.get(coord).foreach { stone => //para cada coordenada do tabuleiro
                 val circle = new Circle(20) // desenhamos uma peça , para começar desenhamos só o criculo com tamanho 20
@@ -86,6 +91,24 @@ class Controller {
         val c = id.charAt(5).asDigit
         val clickedCoord = (r, c)
 
+        // FASE DE REMOÇÃO INICIAL (Tarefa T8 - Usabilidade)[cite: 1]
+        if (currentOpenCoords.isEmpty) { // Se não há buracos, Preto remove Centro ou Canto
+            if (isCenterOrCorner(clickedCoord)) {
+                removerPecaInicial(clickedCoord)
+                lblStatus.setText("Brancas: tirem uma peça adjacente.")
+            } else lblStatus.setText("Inválido! Escolhe Centro ou Canto.")
+            return
+        }
+
+        if (currentOpenCoords.length == 1) { // Branco remove adjacente à primeira
+            if (isAdjacent(clickedCoord, currentOpenCoords.head)) {
+                removerPecaInicial(clickedCoord)
+                lblStatus.setText("Jogo normal! Vez das Pretas.")
+            } else lblStatus.setText("Inválido! Escolhe uma peça adjacente.")
+            return
+        }
+
+        // JOGO NORMAL (Saltos)
         selectedCoord match { //ao carregar na peça de origem é o que a torna vede no fundo
             case None => //caso não exista nenhuma peça selecionada de origem
                 currentBoard.get(clickedCoord) match { //vamos pegar na célula em que o jogador carregou
@@ -103,22 +126,25 @@ class Controller {
 
             case Some(fromCoord) => //caso esteja a carregar numa coordenada de origem que já estava selecionada como coordenada de origem
                 if (clickedCoord == fromCoord) { //caso a coordenada carregada coreresponda a uma coordenada que já foi definida como a de origem
-                    selectedCoord = None //retiramos esta peça como sendo a peça de origem, ou seja, carregar uma vez, a posição passa a ser a de origem, carrego uma segunda vez na mesma posição cancelo aquela posição como posição de origem
-                    renderBoard()//desenha novamente o board, para o fundo deixar de estar verde
-                    lblStatus.setText(if (currentPlayer == Stone.Black) "Vez das Pretas." else "Vez das Brancas.")//manda uma mensagem ao jogador para saber quem é a peça atual a ser jogada
+                    // MODIFICAÇÃO: Se clicar na própria peça durante captura múltipla, termina o turno[cite: 1]
+                    finalizarTurno()
                 } else { // se carreguei numa outra coordenada, posso fazer  a jogada
                     val (optBoard, newOpenCoords) = Logic.play(
-                        currentBoard, currentPlayer, fromCoord, clickedCoord, currentOpenCoords //chamo a lógica do play feita na primeira parte do trabaho
+                        currentBoard, currentPlayer, fromCoord, clickedCoord, currentOpenCoords //chamo a lógica do play feita na primeira parte do trabaho[cite: 3]
                     )
                     optBoard match {
                         case Some(newBoard) => //caso a jogada tenha sido válida
                             currentBoard = newBoard //criamos um novo tabuleiro, para retirar as peças da posição em que estavam
                             currentOpenCoords = newOpenCoords //atualiza a lista de posições vazias
-                            currentPlayer = Game.opponent(currentPlayer)//muda de jogador usando a função opponent que já estava feita no ficheiro Game da primeira parte do trabalho
-                            selectedCoord = None //meto a coordenada selecionada a None
-                            renderBoard() //desenho o tabuleiro
-                            val nomeJogador = if (currentPlayer == Stone.Black) "Pretas" else "Brancas"
-                            lblStatus.setText(s"Jogada válida! Vez das $nomeJogador.") //envio uma mensagem para o jogador a informar de quem é a vez
+                           // Verifica se pode saltar novamente com a MESMA peça
+                            if (podeSaltarMais(newBoard, clickedCoord, currentPlayer)) {
+                                selectedCoord = Some(clickedCoord) // Mantém a peça selecionada no novo lugar
+                                renderBoard()
+                                destacarCelula(clickedCoord, "rgba(255, 255, 0, 0.4)") // Amarelo para indicar que pode continuar
+                                lblStatus.setText("Captura múltipla! Continua ou clica na peça para terminar.")
+                            } else {
+                                finalizarTurno()
+                            }
 
                         case None => //caso o play não ocorra com sucesso (logo não devolve nenhum tabuleiro)
                             lblStatus.setText("Salto inválido! Escolhe novamente.") //enviamos uma mensagem de erro para o jogador
@@ -127,5 +153,79 @@ class Controller {
                     }
                 }
         }
+    }
+    def finalizarTurno(): Unit = {
+        currentPlayer = Game.opponent(currentPlayer) //muda de jogador[cite: 2]
+        selectedCoord = None //meto a coordenada selecionada a None
+        renderBoard() //desenho o tabuleiro
+        val nomeJogador = if (currentPlayer == Stone.Black) "Pretas" else "Brancas"
+        lblStatus.setText(s"Vez das $nomeJogador.")
+    }
+
+    def removerPecaInicial(coord: Coord2D): Unit = {
+        currentBoard = currentBoard - coord
+        currentOpenCoords = coord :: currentOpenCoords
+        currentPlayer = Game.opponent(currentPlayer)
+        renderBoard()
+    }
+
+    def fazerJogadaIA(): Unit = { // Implementa a Tarefa T3 usando a tua lógica funcional
+        // Função interna recursiva para permitir que a IA realize saltos múltiplos
+        def realizarMovimentosIA(board: Board, rand: MyRandom, open: List[Coord2D], lastTo: Option[Coord2D]): Unit = {
+            val (optBoard, nextRand, newList, coordTo) = lastTo match {
+                case None => Logic.playRandomly(board, rand, currentPlayer, open, Logic.randomMove)
+                case Some(pos) =>
+                    // Procura um destino válido a partir da posição atual da peça que está a saltar[cite: 4]
+                    val possibleTo = List((pos._1+2, pos._2), (pos._1-2, pos._2), (pos._1, pos._2+2), (pos._1, pos._2-2))
+                        .filter(t => t._1 >= 0 && t._1 < ROWS && t._2 >= 0 && t._2 < COLS && !board.contains(t))
+
+                    if (possibleTo.isEmpty) (None, rand, open, None)
+                    else {
+                        val (target, nr) = Logic.randomMove(possibleTo, rand)
+                        val (nb, nl) = Logic.play(board, currentPlayer, pos, target, open)
+                        (nb, nr, nl, Some(target))
+                    }
+            }
+
+            optBoard match {
+                case Some(nb) =>
+                    currentBoard = nb
+                    currentRand = nextRand
+                    currentOpenCoords = newList
+                    renderBoard()
+                    coordTo match {
+                        case Some(to) if podeSaltarMais(nb, to, currentPlayer) =>
+                            // IA continua a saltar se houver mais capturas disponíveis[cite: 1]
+                            realizarMovimentosIA(nb, nextRand, newList, Some(to))
+                        case _ => finalizarTurno()
+                    }
+                case None => if (lastTo.isEmpty) lblStatus.setText("IA não encontrou jogadas!") else finalizarTurno()
+            }
+        }
+        realizarMovimentosIA(currentBoard, currentRand, currentOpenCoords, None)
+    }
+
+    def isCenterOrCorner(c: Coord2D): Boolean = {
+        val centers = List((2,2), (2,3), (3,2), (3,3))
+        val corners = List((0,0), (0,5), (5,0), (5,5))
+        centers.contains(c) || corners.contains(c)
+    }
+
+    def isAdjacent(c1: Coord2D, c2: Coord2D): Boolean = {
+        Math.abs(c1._1 - c2._1) + Math.abs(c1._2 - c2._2) == 1
+    }
+
+    def podeSaltarMais(board: Board, pos: Coord2D, p: Stone): Boolean = {
+        val directions = List((2,0), (-2,0), (0,2), (0,-2))
+        directions.exists { 
+            case (dr, dc) =>
+            val target = (pos._1 + dr, pos._2 + dc)
+            val mid = (pos._1 + dr/2, pos._2 + dc/2)
+            target._1 >= 0 && target._1 < ROWS && target._2 >= 0 && target._2 < COLS && !board.contains(target) && board.get(mid).exists(_ != p)
+        }
+    }
+
+    def destacarCelula(c: Coord2D, cor: String): Unit = {
+        cells.get(c).foreach(_.setStyle(s"-fx-background-color: $cor; -fx-border-color: #cccccc;"))
     }
 }
