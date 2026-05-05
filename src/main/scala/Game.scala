@@ -60,10 +60,10 @@ object Game {
         }
     }
 
-    @tailrec
+    @tailrec //funciona como um ciclo while pelo compilador, evita stack overflow
     def getOpenCoords(game: Game, r: Int, c: Int, acc: List[Coord2D]): List[Coord2D] = {
         (r, c) match {
-            case (row, 0) if row == game.rows => acc // Fim
+            case (row, 0) if row == game.rows => acc // Fim, usamos um acumulador que guarda os valores vistos ao longo da função recursiva
             case (row, col) if col == game.cols => getOpenCoords(game, row + 1, 0, acc) // Salta linha
             case (row, col) =>
                 val newAcc = game.board.get((row, col)) match {

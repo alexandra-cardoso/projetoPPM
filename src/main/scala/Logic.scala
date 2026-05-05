@@ -27,7 +27,7 @@ object Logic {
 
     def playRandomly(board: Board, r: MyRandom, player: Stone, lstOpenCoords: List[Coord2D], f: (List[Coord2D], MyRandom) => (Coord2D, MyRandom)): (Option[Board], MyRandom, List[Coord2D], Option[Coord2D]) = {
 
-        @tailrec
+        @tailrec //tabuleirp donamico, logo é preciso saber quantas linha e colunas existem, fomos calcular isso por peças.
         def contarLinhas(r: Int): Int = {
             board.get((r, 0)) match {
                 case Some(_) => contarLinhas(r + 1) // Tem peça, continua a descer
@@ -84,16 +84,16 @@ object Logic {
             (targetTo._1, targetTo._2 + 2)
         )
 
-        @tailrec
-        def checkCoords(coords: List[Coord2D]): Option[Coord2D] = coords match {
-            case Nil => None
-            case coord :: tail =>
+        @tailrec //vê as 4 posições onde pode andar para ver se pode comer.
+        def checkCoords(coords: List[Coord2D]): Option[Coord2D] = coords match { //valida se as posições existem mesmo no tabuleiro.
+            case Nil => None //ficou sem coordenadas para testar a jogada 
+            case coord :: tail =>//encontrou uma coordenada na head
                 val valid = coord._1 >= 0 && coord._1 < rows && coord._2 >= 0 && coord._2 < cols
                 if (valid) {
-                    val middle = ((coord._1 + targetTo._1) / 2, (coord._2 + targetTo._2) / 2)
+                    val middle = ((coord._1 + targetTo._1) / 2, (coord._2 + targetTo._2) / 2) //vê se existe uma adversária (no meio)
                     (board.get(coord), board.get(middle)) match {
-                        case (Some(s), Some(m)) if s == player && m == opponent => Some(coord)
-                        case _ => checkCoords(tail)
+                        case (Some(s), Some(m)) if s == player && m == opponent => Some(coord) //vê se essa posição para um adversária é uma peça oponente
+                        case _ => checkCoords(tail) //chama recursivamente para tentar encontrar
                     }
                 } else {
                     checkCoords(tail)
