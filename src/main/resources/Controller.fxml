@@ -31,7 +31,7 @@
                <RowConstraints percentHeight="16.66" vgrow="SOMETIMES" />
            </rowConstraints>
            <children>
-               <!-- LINHA 0 -->
+
                <Pane id="cell00" fx:id="cell00" onMouseClicked="#handleCellClick" GridPane.rowIndex="0" GridPane.columnIndex="0" />
                <Pane id="cell01" fx:id="cell01" onMouseClicked="#handleCellClick" GridPane.rowIndex="0" GridPane.columnIndex="1" />
                <Pane id="cell02" fx:id="cell02" onMouseClicked="#handleCellClick" GridPane.rowIndex="0" GridPane.columnIndex="2" />
@@ -39,7 +39,7 @@
                <Pane id="cell04" fx:id="cell04" onMouseClicked="#handleCellClick" GridPane.rowIndex="0" GridPane.columnIndex="4" />
                <Pane id="cell05" fx:id="cell05" onMouseClicked="#handleCellClick" GridPane.rowIndex="0" GridPane.columnIndex="5" />
 
-               <!-- LINHA 1 -->
+
                <Pane id="cell10" fx:id="cell10" onMouseClicked="#handleCellClick" GridPane.rowIndex="1" GridPane.columnIndex="0" />
                <Pane id="cell11" fx:id="cell11" onMouseClicked="#handleCellClick" GridPane.rowIndex="1" GridPane.columnIndex="1" />
                <Pane id="cell12" fx:id="cell12" onMouseClicked="#handleCellClick" GridPane.rowIndex="1" GridPane.columnIndex="2" />
@@ -47,7 +47,7 @@
                <Pane id="cell14" fx:id="cell14" onMouseClicked="#handleCellClick" GridPane.rowIndex="1" GridPane.columnIndex="4" />
                <Pane id="cell15" fx:id="cell15" onMouseClicked="#handleCellClick" GridPane.rowIndex="1" GridPane.columnIndex="5" />
 
-               <!-- LINHA 2 -->
+
                <Pane id="cell20" fx:id="cell20" onMouseClicked="#handleCellClick" GridPane.rowIndex="2" GridPane.columnIndex="0" />
                <Pane id="cell21" fx:id="cell21" onMouseClicked="#handleCellClick" GridPane.rowIndex="2" GridPane.columnIndex="1" />
                <Pane id="cell22" fx:id="cell22" onMouseClicked="#handleCellClick" GridPane.rowIndex="2" GridPane.columnIndex="2" />
@@ -55,7 +55,7 @@
                <Pane id="cell24" fx:id="cell24" onMouseClicked="#handleCellClick" GridPane.rowIndex="2" GridPane.columnIndex="4" />
                <Pane id="cell25" fx:id="cell25" onMouseClicked="#handleCellClick" GridPane.rowIndex="2" GridPane.columnIndex="5" />
 
-               <!-- LINHA 3 -->
+
                <Pane id="cell30" fx:id="cell30" onMouseClicked="#handleCellClick" GridPane.rowIndex="3" GridPane.columnIndex="0" />
                <Pane id="cell31" fx:id="cell31" onMouseClicked="#handleCellClick" GridPane.rowIndex="3" GridPane.columnIndex="1" />
                <Pane id="cell32" fx:id="cell32" onMouseClicked="#handleCellClick" GridPane.rowIndex="3" GridPane.columnIndex="2" />
@@ -63,7 +63,7 @@
                <Pane id="cell34" fx:id="cell34" onMouseClicked="#handleCellClick" GridPane.rowIndex="3" GridPane.columnIndex="4" />
                <Pane id="cell35" fx:id="cell35" onMouseClicked="#handleCellClick" GridPane.rowIndex="3" GridPane.columnIndex="5" />
 
-               <!-- LINHA 4 -->
+
                <Pane id="cell40" fx:id="cell40" onMouseClicked="#handleCellClick" GridPane.rowIndex="4" GridPane.columnIndex="0" />
                <Pane id="cell41" fx:id="cell41" onMouseClicked="#handleCellClick" GridPane.rowIndex="4" GridPane.columnIndex="1" />
                <Pane id="cell42" fx:id="cell42" onMouseClicked="#handleCellClick" GridPane.rowIndex="4" GridPane.columnIndex="2" />
@@ -71,7 +71,7 @@
                <Pane id="cell44" fx:id="cell44" onMouseClicked="#handleCellClick" GridPane.rowIndex="4" GridPane.columnIndex="4" />
                <Pane id="cell45" fx:id="cell45" onMouseClicked="#handleCellClick" GridPane.rowIndex="4" GridPane.columnIndex="5" />
 
-               <!-- LINHA 5 -->
+
                <Pane id="cell50" fx:id="cell50" onMouseClicked="#handleCellClick" GridPane.rowIndex="5" GridPane.columnIndex="0" />
                <Pane id="cell51" fx:id="cell51" onMouseClicked="#handleCellClick" GridPane.rowIndex="5" GridPane.columnIndex="1" />
                <Pane id="cell52" fx:id="cell52" onMouseClicked="#handleCellClick" GridPane.rowIndex="5" GridPane.columnIndex="2" />
