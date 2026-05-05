@@ -126,8 +126,8 @@ class Controller {
 
             case Some(fromCoord) => //caso esteja a carregar numa coordenada de origem que já estava selecionada como coordenada de origem
                 if (clickedCoord == fromCoord) { //caso a coordenada carregada coreresponda a uma coordenada que já foi definida como a de origem
-                    // MODIFICAÇÃO: Se clicar na própria peça durante captura múltipla, termina o turno[cite: 1]
-                    finalizarTurno()
+                    selectedCoord=None
+                    renderBoard()
                 } else { // se carreguei numa outra coordenada, posso fazer  a jogada
                     val (optBoard, newOpenCoords) = Logic.play(
                         currentBoard, currentPlayer, fromCoord, clickedCoord, currentOpenCoords //chamo a lógica do play feita na primeira parte do trabaho[cite: 3]
