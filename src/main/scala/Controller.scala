@@ -83,7 +83,7 @@ class Controller {
     }
 
     @FXML
-    def handleCellClick(event: MouseEvent): Unit = { //função definidina no scene builder para o que acontece ao carregar no botões
+    def handleCellClick(event: MouseEvent): Unit = { //função definida no scene builder para o que acontece ao carregar no botões
         val source = event.getSource.asInstanceOf[Pane]
         val id = source.getId
         // extrai as coordenadas clicadas
@@ -102,7 +102,7 @@ class Controller {
                 }
                 return
 
-            case firstRemoved :: Nil => // Caso exista apenas uma coordenada na lista (2ª peça das Brancas)[cite: 1]
+            case firstRemoved :: Nil => // Caso exista apenas uma coordenada na lista (2ª peça das Brancas)
                 if (isAdjacent(clickedCoord, firstRemoved) && currentBoard.get(clickedCoord).contains(Stone.White)) {
                     removerPecaInicial(clickedCoord)
                     lblStatus.setText("Jogo normal! Vez das Pretas.")
@@ -132,9 +132,9 @@ class Controller {
                         }
 
                     case Some(fromCoord) => //caso esteja a carregar numa coordenada de origem que já estava selecionada como coordenada de origem
-                        if (clickedCoord == fromCoord) { //caso a coordenada carregada coreresponda a uma coordenada que já foi definida como a de origem
+                        if (clickedCoord == fromCoord) { //caso a coordenada carregada corresponda a uma coordenada que já foi definida como a de origem
                             selectedCoord=None
-                            renderBoard()
+                            renderBoard() //desseleciono a peça
                         } else { // se carreguei numa outra coordenada, posso fazer  a jogada
                             val (optBoard, newOpenCoords) = Logic.play(
                                 currentBoard, currentPlayer, fromCoord, clickedCoord, currentOpenCoords //chamo a lógica do play feita na primeira parte do trabaho[cite: 3]
@@ -144,11 +144,11 @@ class Controller {
                                     currentBoard = newBoard //criamos um novo tabuleiro, para retirar as peças da posição em que estavam
                                     currentOpenCoords = newOpenCoords //atualiza a lista de posições vazias
 
-                                    // LÓGICA DE CAPTURA MÚLTIPLA: Verifica se pode saltar novamente com a MESMA peça[cite: 1, 4]
+                                    // Verifica se pode saltar novamente com a MESMA peça
                                     if (podeSaltarMais(newBoard, clickedCoord, currentPlayer)) {
                                         selectedCoord = Some(clickedCoord) // Mantém a peça selecionada no novo lugar
                                         renderBoard()
-                                        destacarCelula(clickedCoord, "rgba(255, 255, 0, 0.4)") // Amarelo para indicar que pode continuar[cite: 1]
+                                        destacarCelula(clickedCoord, "rgba(255, 255, 0, 0.4)") // coloquei a amarelo para indicar que pode continuar
 
                                         val proximosDestinos = obterDestinosValidos(clickedCoord, currentPlayer, newBoard)
                                         proximosDestinos.foreach(d => destacarCelula(d, "rgba(255, 0, 0, 0.4)"))
@@ -171,35 +171,35 @@ class Controller {
         }
     }
     def finalizarTurno(): Unit = {
-        currentPlayer = Game.opponent(currentPlayer) //muda de jogador[cite: 2]
+        currentPlayer = Game.opponent(currentPlayer) //muda de jogador
         selectedCoord = None //meto a coordenada selecionada a None
         renderBoard() //desenho o tabuleiro
         val nomeJogador = if (currentPlayer == Stone.Black) "Pretas" else "Brancas"
         lblStatus.setText(s"Vez das $nomeJogador.")
     }
 
-    def removerPecaInicial(coord: Coord2D): Unit = {
+    def removerPecaInicial(coord: Coord2D): Unit = { //metodo que remove visualmente a peça do tabuleiro
         currentBoard = currentBoard - coord
-        currentOpenCoords = coord :: currentOpenCoords
-        currentPlayer = Game.opponent(currentPlayer)
+        currentOpenCoords = coord :: currentOpenCoords //adiciono essa coordernada à lista de coordenadas livres
+        currentPlayer = Game.opponent(currentPlayer)//troco de jogador
         renderBoard()
     }
 
-    def obterDestinosValidos(pos: Coord2D, p: Stone, board: Board): List[Coord2D] = {
-        val directions = List((2, 0), (-2, 0), (0, 2), (0, -2))
+    def obterDestinosValidos(pos: Coord2D, p: Stone, board: Board): List[Coord2D] = {//metodo que verifica os destinos validos para poder assinala-los a vermelho lá em cima
+        val directions = List((2, 0), (-2, 0), (0, 2), (0, -2)) //crio uma lista de direções com as 4 direções que me posso mover
         directions.flatMap { case (dr, dc) =>
             val target = (pos._1 + dr, pos._2 + dc)
             val mid = (pos._1 + dr / 2, pos._2 + dc / 2)
 
             val dentro = target._1 >= 0 && target._1 < ROWS && target._2 >= 0 && target._2 < COLS
             if (dentro && !board.contains(target) && board.get(mid).exists(_ != p)) {
-                Some(target) // Destino válido encontrado[cite: 3, 4]
+                Some(target) // Destino válido encontrado
             } else None
         }
     }
 
-    def fazerJogadaRandom(): Unit = { // Implementa a Tarefa T3 usando a tua lógica funcional
-        // Função interna recursiva para permitir que a IA realize saltos múltiplos
+    def fazerJogadaRandom(): Unit = { // Implementa a Tarefa T3
+        // Função interna recursiva para permitir que  realize saltos múltiplos
         def realizarMovimentosIA(board: Board, rand: MyRandom, open: List[Coord2D], lastTo: Option[Coord2D]): Unit = {
             val (optBoard, nextRand, newList, coordTo) = lastTo match {
                 case None => Logic.playRandomly(board, rand, currentPlayer, open, Logic.randomMove)
@@ -224,7 +224,7 @@ class Controller {
                     renderBoard()
                     coordTo match {
                         case Some(to) if podeSaltarMais(nb, to, currentPlayer) =>
-                            // IA continua a saltar se houver mais capturas disponíveis[cite: 1]
+                            // continua a saltar se houver mais capturas disponíveis
                             realizarMovimentosIA(nb, nextRand, newList, Some(to))
                         case _ => finalizarTurno()
                     }
@@ -234,20 +234,20 @@ class Controller {
         realizarMovimentosIA(currentBoard, currentRand, currentOpenCoords, None)
     }
 
-    def isCenterOrCorner(c: Coord2D): Boolean = {
+    def isCenterOrCorner(c: Coord2D): Boolean = {//metodo que faz a verificação inicial de ser uma ponta ou um centro para saber se posso etirar a pedra
         val centers = List((2,2), (2,3), (3,2), (3,3))
         val corners = List((0,0), (0,5), (5,0), (5,5))
         centers.contains(c) || corners.contains(c)
     }
 
-    def isAdjacent(c1: Coord2D, c2: Coord2D): Boolean = {
+    def isAdjacent(c1: Coord2D, c2: Coord2D): Boolean = {//metodo se vê se a posição é adjacente a outra que recebe, tambêm para a verificação de remoção incial
         Math.abs(c1._1 - c2._1) + Math.abs(c1._2 - c2._2) == 1
     }
 
-    def podeSaltarMais(board: Board, pos: Coord2D, p: Stone): Boolean = {
+    def podeSaltarMais(board: Board, pos: Coord2D, p: Stone): Boolean = {//metodo que verifica a captura multipla
         val directions = List((2, 0), (-2, 0), (0, 2), (0, -2))
 
-        // O .exists verifica se pelo menos uma direção permite o salto[cite: 4]
+        // exists verifica se pelo menos uma direção permite o salto
         directions.exists { case (dr, dc) =>
             val target = (pos._1 + dr, pos._2 + dc)
             val mid = (pos._1 + dr / 2, pos._2 + dc / 2)
@@ -255,12 +255,12 @@ class Controller {
             val dentro = target._1 >= 0 && target._1 < ROWS && target._2 >= 0 && target._2 < COLS
 
             if (dentro) {
-                // CORREÇÃO: Verificamos se o destino está contido na lista de buracos (currentOpenCoords)[cite: 3, 4]
+               //Verificamos se o destino está contido na lista de buracos (currentOpenCoords)
                 // Se estiver no Board, não está vazio.
                 val destinoVazio = !board.contains(target)
                 val pecaNoMeio = board.get(mid)
 
-                // O inimigo tem de existir (Some) e ser de cor diferente do jogador atual (p)[cite: 1, 4]
+                // O inimigo tem de existir (Some) e ser de cor diferente do jogador atual (p)
                 val temInimigoNoMeio = pecaNoMeio match {
                     case Some(s) => s != p
                     case None => false
@@ -274,7 +274,8 @@ class Controller {
         }
     }
 
-    def destacarCelula(c: Coord2D, cor: String): Unit = {
+    def destacarCelula(c: Coord2D, cor: String): Unit = { //mete o fundo da celula a verde
         cells.get(c).foreach(_.setStyle(s"-fx-background-color: $cor; -fx-border-color: #cccccc;"))
     }
+
 }
