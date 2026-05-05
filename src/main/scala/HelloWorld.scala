@@ -5,11 +5,12 @@ import javafx.stage.Stage
 
 class HelloWorld extends Application {
     override def start(primaryStage: Stage): Unit = {
-        val fxmlLoader = new FXMLLoader(getClass.getResource("/Controller.fxml")) // Carrega o FXML
-        val mainViewRoot: Parent = fxmlLoader.load()
+        // IMPORTANTE: Agora carregamos primeiro o menu.fxml
+        val fxmlLoader = new FXMLLoader(getClass.getResource("/menu.fxml"))
+        val menuRoot: Parent = fxmlLoader.load()
 
-        val scene = new Scene(mainViewRoot)
-        primaryStage.setTitle("Jogo Kōnane")
+        val scene = new Scene(menuRoot)
+        primaryStage.setTitle("Kōnane - Bem-vindo!")
         primaryStage.setScene(scene)
         primaryStage.setResizable(false)
         primaryStage.show()

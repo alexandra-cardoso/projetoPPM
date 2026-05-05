@@ -22,7 +22,7 @@ class Controller {
     var currentPlayer: Stone = Stone.Black //começam as peças pretas
     var selectedCoord: Option[Coord2D] = None //ao ínicio n\ao existe nenhuma peça selecionada
 
-    // Variável para a Tarefa T1/T3: gerador de números aleatórios puro[cite: 4, 5]
+    // Variável para a Tarefa T1/T3: gerador de números aleatórios puro
     var currentRand: MyRandom = MyRandom(System.currentTimeMillis())
 
     @FXML
@@ -40,7 +40,7 @@ class Controller {
         }
         btnRestart.setOnAction(_ => iniciarNovoJogo())// Configuro os botões, neste caso o botão com o id btn.Restart chama o metodo iniciarNovoJogo()
 
-        // Adicionei a funcionalidade ao botão Undo para servir de gatilho para a IA (Tarefa T3)[cite: 1, 4]
+        // Adicionei a funcionalidade ao botão Undo para servir de gatilho para a IA (Tarefa T3)
         btnUndo.setText("Jogada IA")
         btnUndo.setOnAction(_ => fazerJogadaIA())
 
@@ -49,13 +49,13 @@ class Controller {
 
     def iniciarNovoJogo(): Unit = { //metodo que inicia o tabuleiro e arrnaca o jogo
 
-        val inicialGame = Game.initBoard(ROWS, COLS) // Usamos a função Game.initBoard feita na primeira parte do trabalho PROVAVALEMENTE VAI MUDAR PARA O FICHIERO LOGIC COMO DICA DO PROF[cite: 2]
+        val inicialGame = Game.initBoard(ROWS, COLS) // Usamos a função Game.initBoard feita na primeira parte do trabalho PROVAVALEMENTE VAI MUDAR PARA O FICHIERO LOGIC COMO DICA DO PROF
 
-        // Para permitir a escolha de tirar das pontas ou centro, o tabuleiro começa CHEIO[cite: 1]
+        // Para permitir a escolha de tirar das pontas ou centro, o tabuleiro começa CHEIO
         currentBoard = inicialGame.board
-        currentOpenCoords = List()//atualiza a lista de posições livres para ser as posições do meio de onde retirámos as peças
-        currentPlayer = Stone.Black //começa as peças pretas
-        selectedCoord = None //ao ínicio nenhuma peça está selecionada
+        currentOpenCoords = List() // Começa vazia para entrar na fase de remoção
+        currentPlayer = Stone.Black
+        selectedCoord = None
 
         renderBoard() //chama a função que "desenha" o visual do tabuleiro
         lblStatus.setText("Jogo iniciado! Pretas: tirem uma peça do Centro ou Canto.")
@@ -93,18 +93,18 @@ class Controller {
 
         // FASE DE REMOÇÃO INICIAL (Tarefa T8 - Usabilidade)[cite: 1]
         if (currentOpenCoords.isEmpty) { // Se não há buracos, Preto remove Centro ou Canto
-            if (isCenterOrCorner(clickedCoord)) {
+            if (isCenterOrCorner(clickedCoord) && currentBoard.get(clickedCoord).contains(Stone.Black)) {
                 removerPecaInicial(clickedCoord)
                 lblStatus.setText("Brancas: tirem uma peça adjacente.")
-            } else lblStatus.setText("Inválido! Escolhe Centro ou Canto.")
+            } else lblStatus.setText("Inválido! Escolhe Centro ou Canto (Preto).")
             return
         }
 
         if (currentOpenCoords.length == 1) { // Branco remove adjacente à primeira
-            if (isAdjacent(clickedCoord, currentOpenCoords.head)) {
+            if (isAdjacent(clickedCoord, currentOpenCoords.head) && currentBoard.get(clickedCoord).contains(Stone.White)) {
                 removerPecaInicial(clickedCoord)
                 lblStatus.setText("Jogo normal! Vez das Pretas.")
-            } else lblStatus.setText("Inválido! Escolhe uma peça adjacente.")
+            } else lblStatus.setText("Inválido! Escolhe uma peça branca adjacente.")
             return
         }
 
@@ -126,8 +126,8 @@ class Controller {
 
             case Some(fromCoord) => //caso esteja a carregar numa coordenada de origem que já estava selecionada como coordenada de origem
                 if (clickedCoord == fromCoord) { //caso a coordenada carregada coreresponda a uma coordenada que já foi definida como a de origem
-                    selectedCoord=None
-                    renderBoard()
+                    // CORREÇÃO: Ao clicar na própria peça durante uma captura múltipla, o turno deve acabar[cite: 1]
+                    finalizarTurno()
                 } else { // se carreguei numa outra coordenada, posso fazer  a jogada
                     val (optBoard, newOpenCoords) = Logic.play(
                         currentBoard, currentPlayer, fromCoord, clickedCoord, currentOpenCoords //chamo a lógica do play feita na primeira parte do trabaho[cite: 3]
@@ -136,11 +136,12 @@ class Controller {
                         case Some(newBoard) => //caso a jogada tenha sido válida
                             currentBoard = newBoard //criamos um novo tabuleiro, para retirar as peças da posição em que estavam
                             currentOpenCoords = newOpenCoords //atualiza a lista de posições vazias
-                           // Verifica se pode saltar novamente com a MESMA peça
+
+                            // Verifica se pode saltar novamente com a MESMA peça
                             if (podeSaltarMais(newBoard, clickedCoord, currentPlayer)) {
                                 selectedCoord = Some(clickedCoord) // Mantém a peça selecionada no novo lugar
                                 renderBoard()
-                                destacarCelula(clickedCoord, "rgba(255, 255, 0, 0.4)") // Amarelo para indicar que pode continuar
+                                destacarCelula(clickedCoord, "rgba(255, 255, 0, 0.4)") // Amarelo para indicar que pode continuar[cite: 1]
                                 lblStatus.setText("Captura múltipla! Continua ou clica na peça para terminar.")
                             } else {
                                 finalizarTurno()
@@ -148,8 +149,11 @@ class Controller {
 
                         case None => //caso o play não ocorra com sucesso (logo não devolve nenhum tabuleiro)
                             lblStatus.setText("Salto inválido! Escolhe novamente.") //enviamos uma mensagem de erro para o jogador
-                            selectedCoord = None //metemos a peça selecionada a None
-                            renderBoard() // limpo o verde da seleção
+                            // Se estivermos em captura múltipla, não limpamos a seleção para o jogador tentar outro salto válido com a mesma peça[cite: 1]
+                            if (!podeSaltarMais(currentBoard, fromCoord, currentPlayer)) {
+                                selectedCoord = None
+                                renderBoard()
+                            }
                     }
                 }
         }
@@ -216,12 +220,32 @@ class Controller {
     }
 
     def podeSaltarMais(board: Board, pos: Coord2D, p: Stone): Boolean = {
-        val directions = List((2,0), (-2,0), (0,2), (0,-2))
-        directions.exists { 
-            case (dr, dc) =>
+        val directions = List((2, 0), (-2, 0), (0, 2), (0, -2))
+
+        // O .exists verifica se pelo menos uma direção permite o salto[cite: 4]
+        directions.exists { case (dr, dc) =>
             val target = (pos._1 + dr, pos._2 + dc)
-            val mid = (pos._1 + dr/2, pos._2 + dc/2)
-            target._1 >= 0 && target._1 < ROWS && target._2 >= 0 && target._2 < COLS && !board.contains(target) && board.get(mid).exists(_ != p)
+            val mid = (pos._1 + dr / 2, pos._2 + dc / 2)
+
+            val dentro = target._1 >= 0 && target._1 < ROWS && target._2 >= 0 && target._2 < COLS
+
+            if (dentro) {
+                // CORREÇÃO: Verificamos se o destino está contido na lista de buracos (currentOpenCoords)[cite: 3, 4]
+                // Se estiver no Board, não está vazio.
+                val destinoVazio = !board.contains(target)
+                val pecaNoMeio = board.get(mid)
+
+                // O inimigo tem de existir (Some) e ser de cor diferente do jogador atual (p)[cite: 1, 4]
+                val temInimigoNoMeio = pecaNoMeio match {
+                    case Some(s) => s != p
+                    case None => false
+                }
+
+                if (destinoVazio && temInimigoNoMeio) {
+                    println(s"Salto extra disponível para $p de $pos para $target")
+                    true
+                } else false
+            } else false
         }
     }
 
