@@ -27,7 +27,8 @@ object Logic {
 
     def playRandomly(board: Board, r: MyRandom, player: Stone, lstOpenCoords: List[Coord2D], f: (List[Coord2D], MyRandom) => (Coord2D, MyRandom)): (Option[Board], MyRandom, List[Coord2D], Option[Coord2D]) = {
 
-        @tailrec //tabuleirp donamico, logo é preciso saber quantas linha e colunas existem, fomos calcular isso por peças.
+        //tabuleiro dinâmico- vamos buscar as linhas e colunas
+        @tailrec
         def contarLinhas(r: Int): Int = {
             board.get((r, 0)) match {
                 case Some(_) => contarLinhas(r + 1) // Tem peça, continua a descer
@@ -66,7 +67,7 @@ object Logic {
                     (resultadoJogada._1, nextRand, resultadoJogada._2, Some(coordTo)) //retornamos o novo tabuleiro, a lista de buracos atualizada e para onde jogámos (e o myRand mas isso é pra irmos guardando os estados deste objeto)
 
                 case None => //não dava pra jogar pra este buraco aleatório
-                    val restantes = buracosATestar.filterNot(_ == coordTo) //tiramos da lista de buracos
+                    val restantes = buracosATestar.filterNot(_ == coordTo) //tiramos da lista de buracos o buraco q testou
                     tentarJogar(nextRand, restantes) //vamos tentar outra vez
             }
         }
@@ -84,23 +85,23 @@ object Logic {
             (targetTo._1, targetTo._2 + 2)
         )
 
-        @tailrec //vê as 4 posições onde pode andar para ver se pode comer.
-        def checkCoords(coords: List[Coord2D]): Option[Coord2D] = coords match { //valida se as posições existem mesmo no tabuleiro.
-            case Nil => None //ficou sem coordenadas para testar a jogada 
-            case coord :: tail =>//encontrou uma coordenada na head
-                val valid = coord._1 >= 0 && coord._1 < rows && coord._2 >= 0 && coord._2 < cols
-                if (valid) {
-                    val middle = ((coord._1 + targetTo._1) / 2, (coord._2 + targetTo._2) / 2) //vê se existe uma adversária (no meio)
+        @tailrec
+        def checkCoords(coords: List[Coord2D]): Option[Coord2D] = coords match {
+            case Nil => None //ficou sem coordenadas para testar a jogada
+            case coord :: tail => //encontrou uma coordenada na head da lista
+                val valid = coord._1 >= 0 && coord._1 < rows && coord._2 >= 0 && coord._2 < cols //verifica se ela sequer existe no tabuleiro
+                if (valid) { //se existir
+                    val middle = ((coord._1 + targetTo._1) / 2, (coord._2 + targetTo._2) / 2) //calcula a posição onde deve estar uma peça adversária
                     (board.get(coord), board.get(middle)) match {
-                        case (Some(s), Some(m)) if s == player && m == opponent => Some(coord) //vê se essa posição para um adversária é uma peça oponente
-                        case _ => checkCoords(tail) //chama recursivamente para tentar encontrar
+                        case (Some(s), Some(m)) if s == player && m == opponent => Some(coord) //vê se é de uma peça adversária
+                        case _ => checkCoords(tail)
                     }
                 } else {
-                    checkCoords(tail)
+                    checkCoords(tail) //volta a fazer para outra coordenada
                 }
         }
 
-        checkCoords(options)
+        checkCoords(options) //verifica se alguma dá
     }
 
     def randomMove(lstOpenCoords: List[Coord2D], rand: MyRandom): (Coord2D, MyRandom) = {

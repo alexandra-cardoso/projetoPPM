@@ -60,15 +60,15 @@ object Game {
         }
     }
 
-    @tailrec //funciona como um ciclo while pelo compilador, evita stack overflow
-    def getOpenCoords(game: Game, r: Int, c: Int, acc: List[Coord2D]): List[Coord2D] = {
-        (r, c) match {
-            case (row, 0) if row == game.rows => acc // Fim, usamos um acumulador que guarda os valores vistos ao longo da função recursiva
+    @tailrec //compilador otimiza isto para funcionar como um ciclo while: evita stack overflow
+    def getOpenCoords(game: Game, r: Int, c: Int, acc: List[Coord2D]): List[Coord2D] = { //usamos acumulador que guarda os valores vistos ao longo da fc recursiva
+        (r, c) match { //vamos procurar as linhas e colunas
+            case (row, 0) if row == game.rows => acc // Fim das linhas
             case (row, col) if col == game.cols => getOpenCoords(game, row + 1, 0, acc) // Salta linha
-            case (row, col) =>
-                val newAcc = game.board.get((row, col)) match {
+            case (row, col) => //coords sem limites de tabuleiro
+                val newAcc = game.board.get((row, col)) match { //vamos ao tabuleiro ver se tem peça
                     case None => (row, col) :: acc // Se está vazio, adiciona
-                    case _ => acc
+                    case _ => acc //se tiver peça, mantem o que já tinha
                 }
                 getOpenCoords(game, row, col + 1, newAcc)
         }
@@ -81,7 +81,7 @@ object Game {
                 val stone = if ((r + c) % 2 == 0) Stone.White else Stone.Black
                 (r, c) -> stone
             }
-        }.to(scala.collection.parallel.immutable.ParMap)
+        }.to(scala.collection.parallel.immutable.ParMap) //pk o enunciado pediu
 
         Game(tabuleiro,rows,cols, Stone.Black, "Jogo iniciado!")
     }
@@ -110,49 +110,49 @@ object KonaneGame extends App {
 
         val starterStone = state.board.get((l1, c1))
 
-        if (starterStone.contains(state.currentPlayer)) {
+        if (starterStone.contains(state.currentPlayer)) { //só se joga se nessa posição tiver uma peça desse jogador
             val (res, newList) = Logic.play(state.board, state.currentPlayer, (l1, c1), (l2, c2), lstOpenCoords)
 
             res match {
-                case Some(newBoard) =>
+                case Some(newBoard) => //se der p jogar
                     println(s"\nÚltima jogada: ($l1,$c1) para ($l2,$c2)")
                     val estadoAtualizado = state.copy(board = newBoard)
                     Game.render(estadoAtualizado)
                     print("\nQueres capturar novamente? s/n: ")
                     val res = readLine()
-                    res match {
-                        case "s" => gameLoop(
+                    res match { //no sim, tem que ser a mesma peça
+                        case "s" => gameLoop( //recursivo
                             state.copy(board = newBoard, currentPlayer = state.currentPlayer, message = "Continua a capturar!"),
-                            newList
+                            newList //de open coords
                         )
                         case "n" => gameLoop(
-                            state.copy(board = newBoard, currentPlayer = Game.opponent(state.currentPlayer), message = "Próximo jogador"),
+                            state.copy(board = newBoard, currentPlayer = Game.opponent(state.currentPlayer), message = "Próximo jogador"), //troca jogador
                             newList
                         )
                         case _ => gameLoop(
-                            state.copy(board = newBoard, currentPlayer = Game.opponent(state.currentPlayer), message = "Input inválido. Próximo jogador!"),
+                            state.copy(board = newBoard, currentPlayer = Game.opponent(state.currentPlayer), message = "Input inválido. Próximo jogador!"), //se responder outra merda, é invalido, troca jogador
                             newList
                         )
                     }
                 case None =>
-                    gameLoop(state.copy(message = "SALTO INVÁLIDO! Tenta outra vez."), lstOpenCoords)
+                    gameLoop(state.copy(message = "SALTO INVÁLIDO! Tenta outra vez."), lstOpenCoords) //player n muda
             }
         } else {
-            gameLoop(state.copy(message = "Essa peça não é tua ou a casa está vazia!"), lstOpenCoords)
+            gameLoop(state.copy(message = "Essa peça não é tua ou a casa está vazia!"), lstOpenCoords) //player n muda
         }
     }
 
     println("Configuração do Tabuleiro Kōnane ")
     print("Número de linhas/colunas (ex: 8): ")
     val rows = readInt()
-    val cols = rows
+    val cols = rows //mudar
     val inicialGame = Game.initBoard(rows, cols)
 
-    val midR = rows / 2
+    val midR = rows / 2 //mudar
     val midC = cols / 2
 
     val boardWithoutMiddle = inicialGame.board - (midR, midC) - (midR, midC - 1) //tiramos as coords do meio
-    val inicialEmpty = List((midR, midC), (midR, midC - 1))
+    val inicialEmpty = List((midR, midC), (midR, midC - 1)) //open coords
 
     gameLoop(inicialGame.copy(board = boardWithoutMiddle), inicialEmpty) //copy para manter a imutabilidade dos objetos: cria se uma nova instancia com estas alterações e n se modifica o que já existia
 }

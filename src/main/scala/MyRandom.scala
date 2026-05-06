@@ -6,6 +6,6 @@ case class MyRandom(seed: Long) extends Random {
       0xFFFFFFFFFFFFL
     val nextRandom = MyRandom(newSeed)
     val n = (newSeed >>> 16).toInt % x
-    (if(n<0) -n else n, nextRandom)
+    (if(n<0) -n else n, nextRandom) //my random devolve smp um obj MyRandom tmb, para manter o estado, mantendo a imutabilidade
   }
 }
