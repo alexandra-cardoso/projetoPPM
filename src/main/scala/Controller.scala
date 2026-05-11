@@ -171,6 +171,14 @@ class Controller {
         }
     }
     def finalizarTurno(): Unit = {
+        Logic.verificarVencedor(currentBoard, ROWS, COLS, currentPlayer, currentOpenCoords) match {
+            case Some(vencedor) =>
+                val nome = if (vencedor == Stone.Black) "Pretas" else "Brancas"
+                lblStatus.setText(s"Fim do jogo! Vencedor: $nome")
+                return
+            case None => ()
+        }
+        
         currentPlayer = Game.opponent(currentPlayer) //muda de jogador
         selectedCoord = None //meto a coordenada selecionada a None
         renderBoard() //desenho o tabuleiro
