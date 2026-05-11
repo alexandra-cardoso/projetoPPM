@@ -139,8 +139,6 @@ object Logic {
         Math.abs(c1._1 - c2._1) + Math.abs(c1._2 - c2._2) == 1
     }
 
-    def pedirCoordenada(): Coord2D = (readInt(), readInt())
-
     // T5: Verifica se o jogador atual não tem movimentos possíveis, devolve vencedor.
     def verificarVencedor(board: Board, rows: Int, cols: Int, currentPlayer: Stone, open: List[Coord2D]): Option[Stone] = {
         val directions = List((2, 0), (-2, 0), (0, 2), (0, -2))

@@ -3,12 +3,12 @@ import Stone.Black
 import scala.io.StdIn.*
 import scala.annotation.tailrec
 
-object TUI {
+object TUI extends App {
     case class GameConfig(rows: Int, cols: Int, timerSeconds: Long, difficulty: Int)
 
     def start(): Unit = {
         println("=== BEM-VINDO AO KÖNANE (TUI) ===")
-        mainMenu(GameConfig(8,8,30,1)) //valores aleatórios- padrão
+        mainMenu(GameConfig(8, 8, 30, 1)) //valores aleatórios- padrão
     }
 
     @tailrec
@@ -51,7 +51,7 @@ object TUI {
     }
 
     @tailrec
-    def gameLoop(state: Game, open: List[Coord2D], history: List[Game], config: GameConfig, contraPC: Boolean): Unit = {
+    def gameLoop(state: Game, open: List[Coord2D], history: List[(Game, List[Coord2D])], config: GameConfig, contraPC: Boolean): Unit = {
         Game.render(state)
         val pStr = state.currentPlayer match {
             case Stone.Black => "Pretas"
@@ -67,7 +67,7 @@ object TUI {
                 (Logic.isCenterOrCorner(coord, config.rows, config.cols), state.board.get(coord)) match {
                     case (true, Some(Stone.Black)) =>
                         val nState = state.copy(board = state.board - coord, currentPlayer = Stone.White, message = "Peça removida")
-                        gameLoop(nState, List(coord), state :: history, config, contraPC)
+                        gameLoop(nState, List(coord), (state, open) :: history, config, contraPC)
                     case _ =>
                         gameLoop(state.copy(message = "Inválido. Escolha uma peça preta no centro ou canto"), open, history, config, contraPC)
                 }
@@ -77,49 +77,52 @@ object TUI {
                 (Logic.isAdjacent(coord, open.head), state.board.get(coord)) match {
                     case (true, Some(Stone.White)) =>
                         val nState = state.copy(board = state.board - coord, currentPlayer = Stone.Black, message = "Jogo Iniciado.")
-                        gameLoop(nState, coord :: open, state :: history, config, contraPC)
+                        gameLoop(nState, coord :: open, (state, open) :: history, config, contraPC)
                     case _ =>
                         gameLoop(state.copy(message = "Inválido. Escolha uma branca adjacente."), open, history, config, contraPC)
                 }
             case _ => //o jogo mesmo
-                /* Logic.verificarVencedor(state.board, state.currentPlayer, open) match {   VERIFICAR VENCEDOR: T5
+                Logic.verificarVencedor(state.board, config.rows, config.cols, state.currentPlayer, open) match {
                     case Some(v) =>
-                        println(s"Fim do jogo. O vencedor é: $v")
+                        val nome = v match {
+                            case Stone.White => "Brancas"
+                            case Stone.Black => "Pretas"
+                        }
+                        println(s"Fim do jogo. O vencedor é: $nome")
                         start()
                     case None =>
-                        VEM PARA AQUI O CÓDIGO QUE COMEÇA A SEGUIR
-                } */
-                (contraPC, state.currentPlayer) match { //vamos pedir a jogada
-                    case (true, Stone.White) =>
-                        println("A processar")
-                        val (optBoard, _, newList, _) = Logic.playRandomly(state.board, MyRandom(System.currentTimeMillis()), state.currentPlayer, open, Logic.randomMove)
-                        optBoard match {
-                            case Some(n) => gameLoop(state.copy(board = n, currentPlayer = Stone.Black, message = "Jogada aleatória feita"), newList, state :: history, config, contraPC)
-                            case None => println("Sem movimentos possíveis"); ()
-                        }
-                    case _ =>
-                        println("Comandos: [M] Move | [U] Undo | [R] Restart | [S] Sair")
-                        readLine().toUpperCase() match {
-                            case "M" => realizarMovimento(state, open, history, config, contraPC)
-                            case "U" =>
-                                /*Logic.undo(history) match {
-                                    case Some((estadoAnterior, novoHistorico)) =>
-                                        println("Undo sucedido")
-                                        gameLoop(estadoAnterior._1, estadoAnterior._2, novoHistorico, config, contraPC)
-                                    case None =>
-                                        println("Sem jogadas para anular")
-                                */
-                                println("O undo está em desenvolvimento")
-                                gameLoop(state, open, history, config, contraPC)
-
-                            case "R" => start()
-                            case "S" => ()
-                            case _ => gameLoop(state, open, history, config, contraPC)
+                        (contraPC, state.currentPlayer) match { //vamos pedir a jogada
+                            case (true, Stone.White) =>
+                                println("A processar")
+                                val (optBoard, _, newList, _) = Logic.playRandomly(state.board, MyRandom(System.currentTimeMillis()), state.currentPlayer, open, Logic.randomMove)
+                                optBoard match {
+                                    case Some(n) => gameLoop(state.copy(board = n, currentPlayer = Stone.Black, message = "Jogada aleatória feita"), newList, (state, open) :: history, config, contraPC)
+                                    case None => println("Sem movimentos possíveis"); ()
+                                }
+                            case _ =>
+                                println("Comandos: [M] Move | [U] Undo | [R] Restart | [S] Sair")
+                                readLine().toUpperCase() match {
+                                    case "M" => realizarMovimento(state, open, history, config, contraPC)
+                                    case "U" =>
+                                        Logic.undo(history) match {
+                                            case Some(((estadoAnterior, openAnterior), novoHistorico)) =>
+                                                println("Undo sucedido")
+                                                gameLoop(estadoAnterior, openAnterior, novoHistorico, config, contraPC)
+                                            case None =>
+                                                println("Sem jogadas para anular")
+                                                gameLoop(state, open, history, config, contraPC)
+                                        }
+                                    case "R" => start()
+                                    case "S" => ()
+                                    case _ => gameLoop(state, open, history, config, contraPC)
+                                }
                         }
                 }
         }
     }
-    def realizarMovimento(state: Game, openCoords: List[Coord2D], history: List[Game], config: GameConfig, contraPC: Boolean): Unit = {
+
+
+    def realizarMovimento(state: Game, openCoords: List[Coord2D], history: List[(Game, List[Coord2D])], config: GameConfig, contraPC: Boolean): Unit = {
         print("Origem (L C): ")
         val coordFrom = (readInt(), readInt())
         print("Destino (L C): ")
@@ -132,16 +135,17 @@ object TUI {
                     case Some(newBoard) =>
                         println("Capturou. Continuar a caputar? (s/n)")
                         readLine().toLowerCase() match {
-                            case "s" => gameLoop(state.copy(board = newBoard, message = "Capturou múltiplas peças!"), newList, state :: history, config, contraPC)
-                            case _ => gameLoop(state.copy(board = newBoard, currentPlayer = Game.opponent(state.currentPlayer)), newList, state :: history, config, contraPC)
+                            case "s" => gameLoop(state.copy(board = newBoard, message = "Capturou múltiplas peças!"), newList, (state, openCoords) :: history, config, contraPC)
+                            case _ => gameLoop(state.copy(board = newBoard, currentPlayer = Game.opponent(state.currentPlayer)), newList, (state, openCoords) :: history, config, contraPC)
                         }
-                    case None => println("Salto inválido")
-                    gameLoop(state, openCoords, history, config, contraPC)
+                    case None =>
+                        println("Salto inválido")
+                        gameLoop(state, openCoords, history, config, contraPC)
                 }
-            case _ => println("Seleção inválida!")
-            gameLoop(state, openCoords, history, config, contraPC)
+            case _ =>
+                println("Seleção inválida!")
+                gameLoop(state, openCoords, history, config, contraPC)
         }
     }
-
     start()
 }

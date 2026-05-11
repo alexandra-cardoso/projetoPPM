@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f66ae5e7-d17a-41c8-bc77-636717c0d1f6" name="Changes" comment="apagado main">
-      <change afterPath="$PROJECT_DIR$/src/main/scala/TUI.scala" afterDir="false" />
+    <list default="true" id="f66ae5e7-d17a-41c8-bc77-636717c0d1f6" name="Changes" comment="feito o t7">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/Controller.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/Controller.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/FxApp.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/FxApp.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/Logic.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/Logic.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/TUI.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/TUI.scala" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,6 +24,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -33,12 +32,12 @@
     &quot;assignee&quot;: &quot;alexandra-cardoso&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/alexandra-cardoso/projeto-PPM.git",
-    "accountId": "d93fae1a-d4dd-43c2-9a18-32ae1bcbee38"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/alexandra-cardoso/projeto-PPM.git&quot;,
+    &quot;accountId&quot;: &quot;d93fae1a-d4dd-43c2-9a18-32ae1bcbee38&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="2" />
   </component>
@@ -255,7 +254,15 @@
       <option name="project" value="LOCAL" />
       <updated>1778061062638</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="feito o t7">
+      <option name="closed" value="true" />
+      <created>1778510094372</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1778510094372</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -275,7 +282,8 @@
     <MESSAGE value="criei um menu de entrada! pergunta se queremos entrar no jogo antes de começar (enunciado diz que d\ao pontos pela criatividade)" />
     <MESSAGE value="alterações" />
     <MESSAGE value="apagado main" />
-    <option name="LAST_COMMIT_MESSAGE" value="apagado main" />
+    <MESSAGE value="feito o t7" />
+    <option name="LAST_COMMIT_MESSAGE" value="feito o t7" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
