@@ -1,4 +1,5 @@
 import scala.annotation.tailrec
+import scala.io.StdIn.readInt
 
 object Logic {
     def play(board: Board, player: Stone, coordFrom: Coord2D, coordTo: Coord2D, lstOpenCoords: List[Coord2D]):(Option[Board], List[Coord2D])= {
@@ -115,4 +116,22 @@ object Logic {
         val chosenCoord = lstOpenCoords(index) // a coordenada escolhida vai ser a no index escolhido aleatóriamente
         (chosenCoord, nextMyRandom)
     }
+
+    /*def isCenterOrCorner(c: Coord2D): Boolean = { //metodo que faz a verificação inicial de ser uma ponta ou um centro para saber se posso etirar a pedra
+        val centers = List((2, 2), (2, 3), (3, 2), (3, 3))
+        val corners = List((0, 0), (0, 5), (5, 0), (5, 5))
+        centers.contains(c) || corners.contains(c)
+    }*/
+    
+    def isCenterOrCorner(c: Coord2D, rows: Int, cols: Int): Boolean = {
+        val centers = List((rows/2-1, cols/2-1), (rows/2-1, cols/2), (rows/2, cols/2-1), (rows/2, cols/2))
+        val corners = List((0,0), (0, cols-1), (rows-1, 0), (rows-1, cols-1))
+        centers.contains(c) || corners.contains(c)
+    }
+
+    def isAdjacent(c1: Coord2D, c2: Coord2D): Boolean = { //metodo se vê se a posição é adjacente a outra que recebe, tambêm para a verificação de remoção incial
+        Math.abs(c1._1 - c2._1) + Math.abs(c1._2 - c2._2) == 1
+    }
+
+    def pedirCoordenada(): Coord2D = (readInt(), readInt())
 }

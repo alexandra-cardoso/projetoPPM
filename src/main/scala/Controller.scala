@@ -94,7 +94,7 @@ class Controller {
         // remove-se as peças iniciais
         currentOpenCoords match {
             case Nil => // Caso a lista de coordenadas vazia esteja vazia (1ª peça das Pretas)
-                if (isCenterOrCorner(clickedCoord) && currentBoard.get(clickedCoord).contains(Stone.Black)) {
+                if (Logic.isCenterOrCorner(clickedCoord, ROWS, COLS) && currentBoard.get(clickedCoord).contains(Stone.Black)) {
                     removerPecaInicial(clickedCoord)
                     lblStatus.setText("Brancas: tirem uma peça adjacente.")
                 } else {
@@ -103,7 +103,7 @@ class Controller {
                 return
 
             case firstRemoved :: Nil => // Caso exista apenas uma coordenada na lista (2ª peça das Brancas)
-                if (isAdjacent(clickedCoord, firstRemoved) && currentBoard.get(clickedCoord).contains(Stone.White)) {
+                if (Logic.isAdjacent(clickedCoord, firstRemoved) && currentBoard.get(clickedCoord).contains(Stone.White)) {
                     removerPecaInicial(clickedCoord)
                     lblStatus.setText("Jogo normal! Vez das Pretas.")
                 } else {
@@ -232,16 +232,6 @@ class Controller {
             }
         }
         realizarMovimentosIA(currentBoard, currentRand, currentOpenCoords, None)
-    }
-
-    def isCenterOrCorner(c: Coord2D): Boolean = {//metodo que faz a verificação inicial de ser uma ponta ou um centro para saber se posso etirar a pedra
-        val centers = List((2,2), (2,3), (3,2), (3,3))
-        val corners = List((0,0), (0,5), (5,0), (5,5))
-        centers.contains(c) || corners.contains(c)
-    }
-
-    def isAdjacent(c1: Coord2D, c2: Coord2D): Boolean = {//metodo se vê se a posição é adjacente a outra que recebe, tambêm para a verificação de remoção incial
-        Math.abs(c1._1 - c2._1) + Math.abs(c1._2 - c2._2) == 1
     }
 
     def podeSaltarMais(board: Board, pos: Coord2D, p: Stone): Boolean = {//metodo que verifica a captura multipla

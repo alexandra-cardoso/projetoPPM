@@ -4,12 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f66ae5e7-d17a-41c8-bc77-636717c0d1f6" name="Changes" comment="alterações">
-      <change afterPath="$PROJECT_DIR$/src/main/scala/main.sc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sbt.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sbt.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/Game.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/Game.scala" afterDir="false" />
+    <list default="true" id="f66ae5e7-d17a-41c8-bc77-636717c0d1f6" name="Changes" comment="apagado main">
+      <change afterPath="$PROJECT_DIR$/src/main/scala/TUI.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/Controller.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/Controller.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/FxApp.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/FxApp.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/Logic.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/Logic.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/MyRandom.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/MyRandom.scala" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,12 +33,12 @@
     &quot;assignee&quot;: &quot;alexandra-cardoso&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/alexandra-cardoso/projetoPPM.git&quot;,
-    &quot;accountId&quot;: &quot;3dd252e1-1e85-42d6-9aa6-c18954f64583&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/alexandra-cardoso/projeto-PPM.git",
+    "accountId": "d93fae1a-d4dd-43c2-9a18-32ae1bcbee38"
   }
-}</component>
+}]]></component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="2" />
   </component>
@@ -51,30 +51,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.HelloWorld.executor": "Run",
-    "Application.KonaneGame (1).executor": "Run",
-    "Application.KonaneGame.executor": "Run",
-    "Application.Main.executor": "Run",
-    "Application.main.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/alexa/IdeaProjects/JG1_AlexandraCardoso129865_JoanaCardoso129867_RuiFernandes129857/build.sbt",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Libraries",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "preferences.JavaFX",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.HelloWorld.executor&quot;: &quot;Run&quot;,
+    &quot;Application.KonaneGame (1).executor&quot;: &quot;Run&quot;,
+    &quot;Application.KonaneGame.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Application.main.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/alexa/IdeaProjects/JG1_AlexandraCardoso129865_JoanaCardoso129867_RuiFernandes129857/build.sbt&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.JavaFX&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/resources" />
@@ -127,8 +127,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.30387.90" />
-        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.30387.90" />
+        <option value="bundled-jdk-30f59d01ecdd-26cb7f24e5b0-intellij.indexing.shared.core-IU-253.29346.240" />
       </set>
     </attachedChunks>
   </component>
@@ -240,7 +239,23 @@
       <option name="project" value="LOCAL" />
       <updated>1777999866335</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="alterações">
+      <option name="closed" value="true" />
+      <created>1778061023230</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1778061023230</updated>
+    </task>
+    <task id="LOCAL-00014" summary="apagado main">
+      <option name="closed" value="true" />
+      <created>1778061062638</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1778061062638</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -259,7 +274,8 @@
     <MESSAGE value="meti a cena de voltar an ogra a funcionar, a ideia é, só aparece a possibilidade de voltar a jogar caso exista uma posição possível para isso, se não der nunca aparece a opção de voltar a jogar" />
     <MESSAGE value="criei um menu de entrada! pergunta se queremos entrar no jogo antes de começar (enunciado diz que d\ao pontos pela criatividade)" />
     <MESSAGE value="alterações" />
-    <option name="LAST_COMMIT_MESSAGE" value="alterações" />
+    <MESSAGE value="apagado main" />
+    <option name="LAST_COMMIT_MESSAGE" value="apagado main" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
