@@ -1,5 +1,11 @@
 import scala.annotation.tailrec
 import scala.io.StdIn.readInt
+// Notas de primeira entrega:
+// Criar teste na interface para o random move
+// Mais comentários
+// FindCoordFrom devia retornar a lista para poder escolher a jogada de forma random ou com alguma verificação
+// por exemplo escolher a peçá que podia capturar mais do que uma vez.
+
 
 object Logic {
     def play(board: Board, player: Stone, coordFrom: Coord2D, coordTo: Coord2D, lstOpenCoords: List[Coord2D]):(Option[Board], List[Coord2D])= {
@@ -122,7 +128,7 @@ object Logic {
         val corners = List((0, 0), (0, 5), (5, 0), (5, 5))
         centers.contains(c) || corners.contains(c)
     }*/
-    
+
     def isCenterOrCorner(c: Coord2D, rows: Int, cols: Int): Boolean = {
         val centers = List((rows/2-1, cols/2-1), (rows/2-1, cols/2), (rows/2, cols/2-1), (rows/2, cols/2))
         val corners = List((0,0), (0, cols-1), (rows-1, 0), (rows-1, cols-1))
