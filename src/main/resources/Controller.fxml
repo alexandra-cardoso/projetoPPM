@@ -85,7 +85,8 @@
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
             <Button fx:id="btnRestart" mnemonicParsing="false" text="Reiniciar" />
-            <Button fx:id="btnUndo" mnemonicParsing="false" text="Undo" />
+            <Button fx:id="btnRandom" mnemonicParsing="false" text="Random" />
+             <Button fx:id="btnUndo" mnemonicParsing="false" text="Undo" />
          </children>
       </HBox>
    </bottom>

@@ -5,15 +5,18 @@ import javafx.scene.paint.Color
 import javafx.scene.control.{Button, Label}
 import javafx.scene.input.MouseEvent
 
+
 class Controller {
 
     @FXML var boardGrid: GridPane = _
     @FXML var lblStatus: Label = _ //controla as mensagens que vamos mandando aos jogadores ao longo do jogo
     @FXML var btnRestart: Button = _
+    @FXML var btnRandom: Button = _
     @FXML var btnUndo: Button = _
 
     var cells: Map[Coord2D, Pane] = Map()
-
+    // Guarda o estado
+    var history: List[(Game, List[Coord2D])] = List()
     //aqui em baixo meti as vaiáveis necessárias para o board, como o board na GUI tem uma dimensão fixa, o valor de rows e de cols são "val"
     val ROWS = 6
     val COLS = 6
@@ -41,14 +44,16 @@ class Controller {
         btnRestart.setOnAction(_ => iniciarNovoJogo())// Configuro os botões, neste caso o botão com o id btn.Restart chama o metodo iniciarNovoJogo()
 
         // neste momento o botão undo chama-se Jogar Random, quando o rui fizer o undo acrescento outro botão para a jogada random fácil
-        btnUndo.setText("Jogar Random")
-        btnUndo.setOnAction(_ => fazerJogadaRandom())
+        btnUndo.setText("Undo")
+        btnUndo.setOnAction(_ => undoJogada())
+        btnRandom.setText("Jogar Random")
+        btnRandom.setOnAction(_ => fazerJogadaRandom())
 
         iniciarNovoJogo()// Arranca o jogo
     }
 
     def iniciarNovoJogo(): Unit = { //metodo que inicia o tabuleiro e arrnaca o jogo
-
+        history = List()
         val inicialGame = Game.initBoard(ROWS, COLS) // Usamos a função Game.initBoard feita na primeira parte do trabalho PROVAVALEMENTE VAI MUDAR PARA O FICHIERO LOGIC COMO DICA DO PROF
 
         // Para permitir a escolha de tirar das pontas ou centro, o tabuleiro começa CHEIO
@@ -141,6 +146,7 @@ class Controller {
                             )
                             optBoard match {
                                 case Some(newBoard) => //caso a jogada tenha sido válida
+                                    history = (Game(currentBoard, ROWS, COLS, currentPlayer, "Undo realizado"), currentOpenCoords) :: history
                                     currentBoard = newBoard //criamos um novo tabuleiro, para retirar as peças da posição em que estavam
                                     currentOpenCoords = newOpenCoords //atualiza a lista de posições vazias
 
@@ -186,7 +192,28 @@ class Controller {
         lblStatus.setText(s"Vez das $nomeJogador.")
     }
 
+    def undoJogada(): Unit = {
+        Logic.undo(history) match {
+            case None =>
+                lblStatus.setText("Não há mais jogadas para desfazer!")
+            case Some(((oldGame, oldOpenCoords), remainingHistory)) =>
+                // Atualiza as variáveis do Controller com os dados do objeto Game recuperado
+                currentBoard = oldGame.board
+                currentPlayer = oldGame.currentPlayer
+                // Nota: ROWS e COLS são 'val' no  controller, por isso não mudam,
+                //Atualiza a lista de buracos e o histórico
+                currentOpenCoords = oldOpenCoords
+                history = remainingHistory
+                //Limpa seleções visuais e redesenha o tabuleiro
+                selectedCoord = None
+                renderBoard()
+                // Atualiza a mensagem na UI
+                val nome = if (currentPlayer == Stone.Black) "Pretas" else "Brancas"
+                lblStatus.setText(s"Desfeito! Vez das $nome.")
+        }
+    }
     def removerPecaInicial(coord: Coord2D): Unit = { //metodo que remove visualmente a peça do tabuleiro
+        history = (Game(currentBoard, ROWS, COLS, currentPlayer, "Undo realizado"), currentOpenCoords) :: history
         currentBoard = currentBoard - coord
         currentOpenCoords = coord :: currentOpenCoords //adiciono essa coordernada à lista de coordenadas livres
         currentPlayer = Game.opponent(currentPlayer)//troco de jogador
@@ -207,41 +234,72 @@ class Controller {
     }
 
     def fazerJogadaRandom(): Unit = { // Implementa a Tarefa T3
-        // Função interna recursiva para permitir que  realize saltos múltiplos
-        def realizarMovimentosIA(board: Board, rand: MyRandom, open: List[Coord2D], lastTo: Option[Coord2D]): Unit = {
-            val (optBoard, nextRand, newList, coordTo) = lastTo match {
-                case None => Logic.playRandomly(board, rand, currentPlayer, open, Logic.randomMove)
-                case Some(pos) =>
-                    // Procura um destino válido a partir da posição atual da peça que está a saltar[cite: 4]
-                    val possibleTo = List((pos._1+2, pos._2), (pos._1-2, pos._2), (pos._1, pos._2+2), (pos._1, pos._2-2))
-                        .filter(t => t._1 >= 0 && t._1 < ROWS && t._2 >= 0 && t._2 < COLS && !board.contains(t))
+        currentOpenCoords match {
+            case Nil => // Vez das Pretas removerem a 1ª peça (Centro ou Canto)
+                val opcoes = for {
+                    r <- 0 until ROWS
+                    c <- 0 until COLS
+                    coord = (r, c)
+                    if Logic.isCenterOrCorner(coord, ROWS, COLS) && currentBoard.get(coord).contains(Stone.Black)
+                } yield coord
 
-                    if (possibleTo.isEmpty) (None, rand, open, None)
-                    else {
-                        val (target, nr) = Logic.randomMove(possibleTo, rand)
-                        val (nb, nl) = Logic.play(board, currentPlayer, pos, target, open)
-                        (nb, nr, nl, Some(target))
-                    }
-            }
+                val (escolha, nextRand) = Logic.randomMove(opcoes.toList, currentRand)
+                currentRand = nextRand
+                removerPecaInicial(escolha)
+                lblStatus.setText("Random removeu 1ª peça. Vez das Brancas.")
 
-            optBoard match {
-                case Some(nb) =>
-                    currentBoard = nb
-                    currentRand = nextRand
-                    currentOpenCoords = newList
-                    renderBoard()
-                    coordTo match {
-                        case Some(to) if podeSaltarMais(nb, to, currentPlayer) =>
-                            // continua a saltar se houver mais capturas disponíveis
-                            realizarMovimentosIA(nb, nextRand, newList, Some(to))
-                        case _ => finalizarTurno()
+            case firstRemoved :: Nil => // Vez das Brancas removerem a 2ª peça (Adjacente)
+                val opcoes = for {
+                    r <- 0 until ROWS
+                    c <- 0 until COLS
+                    coord = (r, c)
+                    if Logic.isAdjacent(coord, firstRemoved) && currentBoard.get(coord).contains(Stone.White)
+                } yield coord
+
+                val (escolha, nextRand) = Logic.randomMove(opcoes.toList, currentRand)
+                currentRand = nextRand
+                removerPecaInicial(escolha)
+                lblStatus.setText("Random removeu 2ª peça. Jogo iniciado!")
+
+            case _ => // Jogo normal (o código que já tinhas)
+                history = (Game(currentBoard, ROWS, COLS, currentPlayer, "Undo realizado"), currentOpenCoords) :: history
+
+                def realizarMovimentosRandom(board: Board, rand: MyRandom, open: List[Coord2D], lastTo: Option[Coord2D]): Unit = {
+                    val (optBoard, nextRand, newList, coordTo) = lastTo match {
+                        case None => Logic.playRandomly(board, rand, currentPlayer, open, Logic.randomMove)
+                        case Some(pos) =>
+                            val possibleTo = List((pos._1 + 2, pos._2), (pos._1 - 2, pos._2), (pos._1, pos._2 + 2), (pos._1, pos._2 - 2))
+                                .filter(t => t._1 >= 0 && t._1 < ROWS && t._2 >= 0 && t._2 < COLS && !board.contains(t))
+
+                            if (possibleTo.isEmpty) (None, rand, open, None)
+                            else {
+                                val (target, nr) = Logic.randomMove(possibleTo, rand)
+                                val (nb, nl) = Logic.play(board, currentPlayer, pos, target, open)
+                                (nb, nr, nl, Some(target))
+                            }
                     }
-                case None => if (lastTo.isEmpty) lblStatus.setText("IA não encontrou jogadas!") else finalizarTurno()
-            }
+
+                    optBoard match {
+                        case Some(nb) =>
+                            currentBoard = nb
+                            currentRand = nextRand
+                            currentOpenCoords = newList
+                            renderBoard()
+                            coordTo match {
+                                case Some(to) if podeSaltarMais(nb, to, currentPlayer) =>
+                                    realizarMovimentosRandom(nb, nextRand, newList, Some(to))
+                                case _ => finalizarTurno()
+                            }
+                        case None =>
+                            lblStatus.setText("Não há movimentos possíveis para o Random!")
+                            // Se falhou o random, removemos do histórico para o undo não bugar
+                            history = history.tail
+                    }
+                }
+
+                realizarMovimentosRandom(currentBoard, currentRand, currentOpenCoords, None)
         }
-        realizarMovimentosIA(currentBoard, currentRand, currentOpenCoords, None)
     }
-
     def podeSaltarMais(board: Board, pos: Coord2D, p: Stone): Boolean = {//metodo que verifica a captura multipla
         val directions = List((2, 0), (-2, 0), (0, 2), (0, -2))
 

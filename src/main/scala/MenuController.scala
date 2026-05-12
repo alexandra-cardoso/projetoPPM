@@ -9,7 +9,6 @@ class MenuController {
 
     @FXML
     def handleSim(event: ActionEvent): Unit = {
-
         val stage = event.getSource.asInstanceOf[javafx.scene.Node].getScene.getWindow.asInstanceOf[Stage]
         val fxmlLoader = new FXMLLoader(getClass.getResource("/Controller.fxml"))
         val root: Parent = fxmlLoader.load()
@@ -19,7 +18,6 @@ class MenuController {
 
     @FXML
     def handleNao(event: ActionEvent): Unit = {
-
         Platform.exit()
         System.exit(0)
     }
