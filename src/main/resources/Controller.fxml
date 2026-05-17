@@ -8,12 +8,13 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
 <BorderPane stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
    <center>
        <GridPane fx:id="boardGrid" hgap="2.0" vgap="2.0" alignment="CENTER"
                  maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-                 prefHeight="600.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+                 prefHeight="520.0" prefWidth="600.0" BorderPane.alignment="CENTER">
            <columnConstraints>
                <ColumnConstraints hgrow="SOMETIMES" percentWidth="16.66" />
                <ColumnConstraints hgrow="SOMETIMES" percentWidth="16.66" />
@@ -90,7 +91,11 @@
          </children>
       </HBox>
    </bottom>
-   <top>
-      <Label fx:id="lblStatus" styleClass="status-banner" text="Vez das:" BorderPane.alignment="CENTER" />
-   </top>
+    <top>
+        <HBox alignment="CENTER" spacing="20" BorderPane.alignment="CENTER">
+            <Label fx:id="lblStatus" styleClass="status-banner" text="Vez das:" />
+            <Label fx:id="lblTimer" text="⏱ --"
+                   style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+        </HBox>
+    </top>
 </BorderPane>

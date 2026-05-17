@@ -162,6 +162,7 @@ object Logic {
         history match {
             case Nil => None
             case head :: tail => Some((head, tail))
+            
         }
 
 }

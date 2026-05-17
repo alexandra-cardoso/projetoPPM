@@ -10,6 +10,7 @@ class HelloWorld extends Application {
         val menuRoot: Parent = fxmlLoader.load()
 
         val scene = new Scene(menuRoot)
+        
         primaryStage.setTitle("Kōnane - Bem-vindo!")
         primaryStage.setScene(scene)
         primaryStage.setResizable(false)

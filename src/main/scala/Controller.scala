@@ -13,10 +13,14 @@ class Controller {
     @FXML var btnRestart: Button = _
     @FXML var btnRandom: Button = _
     @FXML var btnUndo: Button = _
+    @FXML var lblTimer: Label = _ //controla o tempo de cada jogada
 
+    var showHints: Boolean = true // Fácil e Médio mostram jogadas para onde o jogador pode ir
+    var timeLimit: Int = 90 // Fácil = 90s, Médio/Difícil = 30s
+    var timer: javafx.animation.Timeline = _ //faz a animação do relógio e do tempo a passar
+    var tempoRestante: Int = 90
     var cells: Map[Coord2D, Pane] = Map()
-    // Guarda o estado
-    var history: List[(Game, List[Coord2D])] = List()
+    var history: List[(Game, List[Coord2D])] = List() //guarda o estado da jogada para ser possível fazer o undo
     //aqui em baixo meti as vaiáveis necessárias para o board, como o board na GUI tem uma dimensão fixa, o valor de rows e de cols são "val"
     val ROWS = 6
     val COLS = 6
@@ -24,64 +28,58 @@ class Controller {
     var currentOpenCoords: List[Coord2D] = List() //a lista de coordenadas vazia está incialmente vazia
     var currentPlayer: Stone = Stone.Black //começam as peças pretas
     var selectedCoord: Option[Coord2D] = None //ao ínicio n\ao existe nenhuma peça selecionada
-
-    // Variável para a Tarefa T1/T3
-    var currentRand: MyRandom = MyRandom(System.currentTimeMillis())
+    var currentRand: MyRandom = MyRandom(System.currentTimeMillis()) //variável para as jogadas random
 
     @FXML
-    def initialize(): Unit = {//este metodo serve para mapear os paines colocados no scenebuilder pelo seu ID de forma a poder inicializar o tabuleiro
-        boardGrid.getChildren.forEach { node => //no fxml, cada painel foi identificado da forma cellRC (R=Row,C=Col)
-            if (node.isInstanceOf[Pane]) {
-                val pane = node.asInstanceOf[Pane]
-                val id = pane.getId
-                if (id != null && id.startsWith("cell")) { //do nome dado, extraí a linha e a coluna onde está.
-                    val r = id.charAt(4).asDigit
-                    val c = id.charAt(5).asDigit
-                    cells += (r, c) -> pane
-                }
+    def initialize(): Unit = {//este metodo serve para mapear os panes colocados no scenebuilder pelo seu ID de forma a poder inicializar o tabuleiro
+        boardGrid.getChildren.forEach { node =>
+            node match {
+                case pane: Pane => //verifico se local onde estou é um pane
+                    Option(pane.getId) match {//verifico o seu id
+                        case Some(id) if id.startsWith("cell") => //se o id começar com um "cell" ou seja representa uma célula (pq foi o nome que escolhemos dar no javaFX)
+                            val r = id.charAt(4).asDigit //o numero da linha é o que está na quarta posição do ID (começa no 0)
+                            val c = id.charAt(5).asDigit //o numero da coluna é o que está na quinta posição do ID (começa no 0)
+                            cells += (r, c) -> pane
+                        case _ => () //caso não exista nenhum Id do pane, n devolve nada
+                    }
+                case _ => () //caso n encontre nenum objeto pane
             }
         }
         btnRestart.setOnAction(_ => iniciarNovoJogo())// Configuro os botões, neste caso o botão com o id btn.Restart chama o metodo iniciarNovoJogo()
-
-        // neste momento o botão undo chama-se Jogar Random, quando o rui fizer o undo acrescento outro botão para a jogada random fácil
         btnUndo.setText("Undo")
-        btnUndo.setOnAction(_ => undoJogada())
+        btnUndo.setOnAction(_ => undoJogada())//o botão undo chega o metodo undoJogada() que volta a jogada atrás
         btnRandom.setText("Jogar Random")
-        btnRandom.setOnAction(_ => fazerJogadaRandom())
-
+        btnRandom.setOnAction(_ => fazerJogadaRandom())//o botão Jogar Random, usa o metodo fazerJogadaRandom()
         iniciarNovoJogo()// Arranca o jogo
     }
-
     def iniciarNovoJogo(): Unit = { //metodo que inicia o tabuleiro e arrnaca o jogo
         history = List()
         val inicialGame = Game.initBoard(ROWS, COLS) // Usamos a função Game.initBoard feita na primeira parte do trabalho PROVAVALEMENTE VAI MUDAR PARA O FICHIERO LOGIC COMO DICA DO PROF
-
         // Para permitir a escolha de tirar das pontas ou centro, o tabuleiro começa CHEIO
         currentBoard = inicialGame.board
         currentOpenCoords = List() // Começa vazia para entrar na fase de remoção
         currentPlayer = Stone.Black
         selectedCoord = None
-
         renderBoard() //chama a função que "desenha" o visual do tabuleiro
+        iniciarTimer() //inicia o timer de cada jogada, dependo do nível de dificuldade escolhido
         lblStatus.setText("Jogo iniciado! Pretas: tirem uma peça do Centro ou Canto.")
     }
-
     // Função que atualiza o lado visual
     def renderBoard(): Unit = {
-        cells.foreach { case (coord, pane) =>
+        cells.foreach {
+            case (coord, pane) =>
             pane.getChildren.clear() //retiro qualquer coisa que possa estar naquele painel ao ínicio do jogo
-            pane.setStyle("-fx-border-color: #cccccc; -fx-background-color: transparent;") // cira uma borda subtil para vermos as grelhas
+            pane.setStyle("-fx-border-color: #cccccc; -fx-background-color: transparent;") // cira uma borda  para vermos as grelhas
 
-            currentBoard.get(coord).foreach { stone => //para cada coordenada do tabuleiro
+            currentBoard.get(coord).foreach {
+                stone => //para cada coordenada do tabuleiro
                 val circle = new Circle(20) // desenhamos uma peça , para começar desenhamos só o criculo com tamanho 20
                 circle.setFill(if (stone == Stone.Black) Color.BLACK else Color.WHITE) //depois peenchemos esse círculo dependendo da cor da peça naquele painel
                 circle.setStroke(Color.DARKGRAY) //linha de fora do círculo fica a cizento escuro
                 circle.setStrokeWidth(2.0) //metemos a largura da linha a 2.0 para ser minimamente vísivel
-
                 // as linhas de baixo são as que permitem que a peça no fique centro da célula
                 circle.centerXProperty().bind(pane.widthProperty().divide(2))
                 circle.centerYProperty().bind(pane.heightProperty().divide(2))
-
                 pane.getChildren.add(circle)//acrescento o círculo criado ao painel correspondente
             }
         }
@@ -91,28 +89,29 @@ class Controller {
     def handleCellClick(event: MouseEvent): Unit = { //função definida no scene builder para o que acontece ao carregar no botões
         val source = event.getSource.asInstanceOf[Pane]
         val id = source.getId
-        // extrai as coordenadas clicadas
+        // extrai as coordenadas clicadas usando a mesma lógica que usamos no initialize()
         val r = id.charAt(4).asDigit
         val c = id.charAt(5).asDigit
         val clickedCoord = (r, c)
-
         // remove-se as peças iniciais
         currentOpenCoords match {
             case Nil => // Caso a lista de coordenadas vazia esteja vazia (1ª peça das Pretas)
-                if (Logic.isCenterOrCorner(clickedCoord, ROWS, COLS) && currentBoard.get(clickedCoord).contains(Stone.Black)) {
-                    removerPecaInicial(clickedCoord)
-                    lblStatus.setText("Brancas: tirem uma peça adjacente.")
-                } else {
-                    lblStatus.setText("Inválido! Escolhe Centro ou Canto (Preto).")
+                (Logic.isCenterOrCorner(clickedCoord, ROWS, COLS), currentBoard.get(clickedCoord)) match {
+                    case (true, Some(Stone.Black)) => //caso seja uma peça do centro ou do canto e seja a vez da peças pretas
+                        removerPecaInicial(clickedCoord) //remove a peça inicial em que se carregou
+                        lblStatus.setText("Brancas: tirem uma peça adjacente.")
+                    case _ =>
+                        lblStatus.setText("Inválido! Escolhe Centro ou Canto (Preto).")
                 }
                 return
 
             case firstRemoved :: Nil => // Caso exista apenas uma coordenada na lista (2ª peça das Brancas)
-                if (Logic.isAdjacent(clickedCoord, firstRemoved) && currentBoard.get(clickedCoord).contains(Stone.White)) {
-                    removerPecaInicial(clickedCoord)
-                    lblStatus.setText("Jogo normal! Vez das Pretas.")
-                } else {
-                    lblStatus.setText("Inválido! Escolhe uma peça branca adjacente.")
+                (Logic.isAdjacent(clickedCoord, firstRemoved), currentBoard.get(clickedCoord)) match {
+                    case (true, Some(Stone.White)) => //caso seja uma peça adjacente e uma peça branca
+                        removerPecaInicial(clickedCoord)//remove a peça branca escolhida
+                        lblStatus.setText("Jogo normal! Vez das Pretas.")
+                    case _ =>
+                        lblStatus.setText("Inválido! Escolhe uma peça branca adjacente.")
                 }
                 return
 
@@ -125,9 +124,10 @@ class Controller {
                                 source.setStyle("-fx-background-color: rgba(0, 255, 0, 0.4); -fx-border-color: #cccccc;") //colocamos o fundo a verde
                                 lblStatus.setText(s"Peça $clickedCoord selecionada. Escolhe o destino.") //coloca esta mensagem no painel de jogo
 
-                                // NOVO: Mostrar destinos válidos a vermelho (Tarefa T8)[cite: 1]
-                                val destinos = obterDestinosValidos(clickedCoord, currentPlayer, currentBoard)
-                                destinos.foreach(d => destacarCelula(d, "rgba(255, 0, 0, 0.4)"))
+                                if (showHints) {
+                                    val destinos = obterDestinosValidos(clickedCoord, currentPlayer, currentBoard)
+                                    destinos.foreach(d => destacarCelula(d, "rgba(255, 0, 0, 0.4)"))
+                                }
 
                             case Some(_) => //caso a peça que selecionada para jogar seja do adversário, enviamos uma mensagem a avisar o jogador
                                 lblStatus.setText("Esta peça é do teu adversário!")
@@ -179,17 +179,18 @@ class Controller {
     def finalizarTurno(): Unit = {
         Logic.verificarVencedor(currentBoard, ROWS, COLS, currentPlayer, currentOpenCoords) match {
             case Some(vencedor) =>
-                val nome = if (vencedor == Stone.Black) "Pretas" else "Brancas"
-                lblStatus.setText(s"Fim do jogo! Vencedor: $nome")
+                if (timer != null) timer.stop()
+                lblTimer.setText("")
                 return
             case None => ()
         }
-        
-        currentPlayer = Game.opponent(currentPlayer) //muda de jogador
-        selectedCoord = None //meto a coordenada selecionada a None
-        renderBoard() //desenho o tabuleiro
+
+        currentPlayer = Game.opponent(currentPlayer)
+        selectedCoord = None
+        renderBoard()
         val nomeJogador = if (currentPlayer == Stone.Black) "Pretas" else "Brancas"
         lblStatus.setText(s"Vez das $nomeJogador.")
+        iniciarTimer() // <-- acrescenta esta linha
     }
 
     def undoJogada(): Unit = {
@@ -210,6 +211,7 @@ class Controller {
                 // Atualiza a mensagem na UI
                 val nome = if (currentPlayer == Stone.Black) "Pretas" else "Brancas"
                 lblStatus.setText(s"Desfeito! Vez das $nome.")
+                iniciarTimer()
         }
     }
     def removerPecaInicial(coord: Coord2D): Unit = { //metodo que remove visualmente a peça do tabuleiro
@@ -334,4 +336,33 @@ class Controller {
         cells.get(c).foreach(_.setStyle(s"-fx-background-color: $cor; -fx-border-color: #cccccc;"))
     }
 
+    def setDifficulty(diff: Difficulty): Unit = {
+        diff match {
+            case Difficulty.Facil => showHints = true; timeLimit = 90
+            case Difficulty.Medio => showHints = true; timeLimit = 30
+            case Difficulty.Dificil => showHints = false; timeLimit = 30
+        }
+    }
+
+    def iniciarTimer(): Unit = {
+        if (timer != null) timer.stop()
+        tempoRestante = timeLimit
+        lblTimer.setText(s"⏱ $tempoRestante s")
+
+        timer = new javafx.animation.Timeline(
+            new javafx.animation.KeyFrame(javafx.util.Duration.seconds(1), _ => {
+                tempoRestante -= 1
+                val cor = if (tempoRestante <= 10) "-fx-text-fill: red;" else "-fx-text-fill: #333;"
+                lblTimer.setStyle(s"-fx-font-size: 20px; -fx-font-weight: bold; $cor")
+                lblTimer.setText(s"⏱ $tempoRestante s")
+                if (tempoRestante <= 0) {
+                    timer.stop()
+                    lblTimer.setText("⏱ Tempo esgotado!")
+                    finalizarTurno()
+                }
+            })
+        )
+        timer.setCycleCount(javafx.animation.Animation.INDEFINITE)
+        timer.play()
+    }
 }
