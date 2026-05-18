@@ -3,14 +3,11 @@ import javafx.fxml.FXMLLoader
 import javafx.scene.{Parent, Scene}
 import javafx.stage.Stage
 
-class HelloWorld extends Application {
+class InitialPage extends Application { //é a classe que permite mostrar o ecrã inicial onde o jogador eexolhe se quer jogar e a dificuldade com que quer jogar
     override def start(primaryStage: Stage): Unit = {
-        // IMPORTANTE: Agora carregamos primeiro o menu.fxml
         val fxmlLoader = new FXMLLoader(getClass.getResource("/menu.fxml"))
         val menuRoot: Parent = fxmlLoader.load()
-
         val scene = new Scene(menuRoot)
-        
         primaryStage.setTitle("Kōnane - Bem-vindo!")
         primaryStage.setScene(scene)
         primaryStage.setResizable(false)
@@ -20,6 +17,6 @@ class HelloWorld extends Application {
 
 object HelloWorld {
     def main(args: Array[String]): Unit = {
-        Application.launch(classOf[HelloWorld], args: _*)
+        Application.launch(classOf[InitialPage], args: _*)
     }
 }
