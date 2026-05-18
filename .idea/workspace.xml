@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f66ae5e7-d17a-41c8-bc77-636717c0d1f6" name="Changes" comment="mudei nome do HelloWorld para initial page para fazer masi sentido">
-      <change beforePath="$PROJECT_DIR$/src/main/scala/MyRandom.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/MyRandom.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/Random.scala" beforeDir="false" />
+    <list default="true" id="f66ae5e7-d17a-41c8-bc77-636717c0d1f6" name="Changes" comment="MUDEI NOMES">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,6 +74,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/scala" />
       <recent name="$PROJECT_DIR$/src/main/resources" />
     </key>
   </component>
@@ -303,7 +303,39 @@
       <option name="project" value="LOCAL" />
       <updated>1779120862877</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="apaguei random, juntamos o trait ao ficheiro MyRandom">
+      <option name="closed" value="true" />
+      <created>1779120992307</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1779120992307</updated>
+    </task>
+    <task id="LOCAL-00022" summary="tirei ficheiros do resources">
+      <option name="closed" value="true" />
+      <created>1779121196689</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1779121196689</updated>
+    </task>
+    <task id="LOCAL-00023" summary="MUDEI NOMES">
+      <option name="closed" value="true" />
+      <created>1779121253804</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1779121253804</updated>
+    </task>
+    <task id="LOCAL-00024" summary="MUDEI NOMES">
+      <option name="closed" value="true" />
+      <created>1779121288403</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1779121288403</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -329,7 +361,10 @@
     <MESSAGE value="adicionei coments" />
     <MESSAGE value="apaguei o obejct do Game e passei métodos para a TUI" />
     <MESSAGE value="mudei nome do HelloWorld para initial page para fazer masi sentido" />
-    <option name="LAST_COMMIT_MESSAGE" value="mudei nome do HelloWorld para initial page para fazer masi sentido" />
+    <MESSAGE value="apaguei random, juntamos o trait ao ficheiro MyRandom" />
+    <MESSAGE value="tirei ficheiros do resources" />
+    <MESSAGE value="MUDEI NOMES" />
+    <option name="LAST_COMMIT_MESSAGE" value="MUDEI NOMES" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
