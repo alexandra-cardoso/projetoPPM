@@ -201,16 +201,16 @@ object Game {
 
     // T5: Verifica se o jogador atual não tem movimentos possíveis, devolve vencedor.
     def verificarVencedor(board: Board, rows: Int, cols: Int, currentPlayer: Stone, open: List[Coord2D]): Option[Stone] = {
-        val directions = List((2, 0), (-2, 0), (0, 2), (0, -2))
-        val opponent = Game.opponent(currentPlayer)
+        val directions = List((2, 0), (-2, 0), (0, 2), (0, -2)) //movimentos possíveis
+        val opponent = Game.opponent(currentPlayer) //guardamos o oponente
 
         // Verifica se alguma peça do currentPlayer tem pelo menos um salto válido
         val temMovimento = board.exists { case (pos, stone) =>
             stone == currentPlayer && directions.exists { case (dr, dc) =>
-                val target = (pos._1 + dr, pos._2 + dc)
-                val mid = (pos._1 + dr / 2, pos._2 + dc / 2)
-                val dentroLimites = target._1 >= 0 && target._1 < rows && target._2 >= 0 && target._2 < cols
-                dentroLimites && open.contains(target) && board.get(mid).contains(opponent)
+                val target = (pos._1 + dr, pos._2 + dc) //posição de destino encontrada
+                val mid = (pos._1 + dr / 2, pos._2 + dc / 2) //posição a meio
+                val dentroLimites = target._1 >= 0 && target._1 < rows && target._2 >= 0 && target._2 < cols //verifica se a posição de destino encontrada está nos limites
+                dentroLimites && open.contains(target) && board.get(mid).contains(opponent) //tem movimento se tiver uma posição de destino nos limites, essa posição estiver livre e a posição do meio tiver uma peça do oponente
             }
         }
 
@@ -218,10 +218,10 @@ object Game {
     }
 
     // T6: Undo — retira o último estado do histórico (par estado+openCoords).
-    def undo(history: List[(Game, List[Coord2D])]): Option[((Game, List[Coord2D]), List[(Game, List[Coord2D])])] =
-        history match {
-            case Nil => None
-            case head :: tail => Some((head, tail))
+    def undo(history: List[(Game, List[Coord2D])]): Option[((Game, List[Coord2D]), List[(Game, List[Coord2D])])] = //recebe já o historico que vai guardando ao longo das jogadas
+        history match { //verifica se a lista tem algumas jogadas
+            case Nil => None //se estiver vazia, não retorna nada
+            case head :: tail => Some((head, tail)) //se tiver algo, retorna esse algo
         }
 
     def obterDestinosValidos(pos: Coord2D, p: Stone, board: Board, rows: Int, cols: Int): List[Coord2D] = { //metodo que verifica os destinos validos para poder assinala-los a vermelho lá em cima

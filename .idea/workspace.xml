@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f66ae5e7-d17a-41c8-bc77-636717c0d1f6" name="Changes" comment="apaguei o logic">
+    <list default="true" id="f66ae5e7-d17a-41c8-bc77-636717c0d1f6" name="Changes" comment="comentários adicionados">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/README.txt" beforeDir="false" afterPath="$PROJECT_DIR$/README.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/Game.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/Game.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/TUI.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/TUI.scala" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,6 +38,9 @@
     &quot;accountId&quot;: &quot;3dd252e1-1e85-42d6-9aa6-c18954f64583&quot;
   }
 }</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="2" />
   </component>
@@ -378,7 +382,6 @@
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="CENAS" />
     <MESSAGE value="MERDAS" />
     <MESSAGE value="MERDAS2" />
     <MESSAGE value="ACABOU" />
@@ -403,7 +406,8 @@
     <MESSAGE value="meti em resources tudo o que é fxml" />
     <MESSAGE value="meti tudo no game" />
     <MESSAGE value="apaguei o logic" />
-    <option name="LAST_COMMIT_MESSAGE" value="apaguei o logic" />
+    <MESSAGE value="comentários adicionados" />
+    <option name="LAST_COMMIT_MESSAGE" value="comentários adicionados" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
