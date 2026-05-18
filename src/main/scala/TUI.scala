@@ -134,7 +134,7 @@ object TUI extends App {
 
 
     def realizarMovimento(state: Game, openCoords: List[Coord2D], history: List[(Game, List[Coord2D])], config: GameConfig, contraPC: Boolean, coordFromOpt: Option[Coord2D] = None): Unit = {
-        val tempoI = System.currentTimeMillis() / 1000;
+        val tempoI = System.currentTimeMillis() / 1000
 
         //vamos ver se este movimento é a continuação dum salto com muitos movimentos ou se é o inicial da jogada
         val coordFrom = coordFromOpt match { //se for uma continuação de jogada, recebe um coordFromOpt com valores
@@ -154,7 +154,7 @@ object TUI extends App {
         val tempoF = System.currentTimeMillis() / 1000
         val tempoDec = tempoF - tempoI
 
-        (tempoDec <= config.timerSeconds) match { //verificamos se o tempo de jogada ainda não ultrapassou o tempo limite
+        tempoDec <= config.timerSeconds match { //verificamos se o tempo de jogada ainda não ultrapassou o tempo limite
             case false => //passou o tempo limite
                 val proxEstado = state.copy(currentPlayer = Game.opponent(state.currentPlayer), message = "Passou a vez por excesso de tempo")
                 gameLoop(proxEstado, openCoords, history, config, contraPC)
