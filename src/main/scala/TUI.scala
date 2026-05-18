@@ -118,7 +118,7 @@ object TUI extends App {
             case 0 =>
                 println("Pretas: Escolha uma peça para remover (Centro ou canto)")
                 val coord = (readInt(), readInt())
-                (Logic.isCenterOrCorner(coord, config.rows, config.cols), state.board.get(coord)) match {
+                (Game.isCenterOrCorner(coord, config.rows, config.cols), state.board.get(coord)) match {
                     case (true, Some(Stone.Black)) =>
                         val nState = state.copy(board = state.board - coord, currentPlayer = Stone.White, message = "Peça removida")
                         gameLoop(nState, List(coord), (state, open) :: history, config, contraPC)
@@ -128,7 +128,7 @@ object TUI extends App {
             case 1 =>
                 println("Brancas: Escolham (Linha Coluna) adjacente ao buraco:")
                 val coord = (readInt(), readInt())
-                (Logic.isAdjacent(coord, open.head), state.board.get(coord)) match {
+                (Game.isAdjacent(coord, open.head), state.board.get(coord)) match {
                     case (true, Some(Stone.White)) =>
                         val nState = state.copy(board = state.board - coord, currentPlayer = Stone.Black, message = "Jogo Iniciado.")
                         gameLoop(nState, coord :: open, (state, open) :: history, config, contraPC)
@@ -136,7 +136,7 @@ object TUI extends App {
                         gameLoop(state.copy(message = "Inválido. Escolha uma branca adjacente."), open, history, config, contraPC)
                 }
             case _ => //o jogo mesmo
-                Logic.verificarVencedor(state.board, config.rows, config.cols, state.currentPlayer, open) match {
+                Game.verificarVencedor(state.board, config.rows, config.cols, state.currentPlayer, open) match {
                     case Some(v) =>
                         val nome = v match {
                             case Stone.White => "Brancas"
@@ -148,7 +148,7 @@ object TUI extends App {
                         (contraPC, state.currentPlayer) match { //vamos pedir a jogada
                             case (true, Stone.White) =>
                                 println("A processar")
-                                val (optBoard, _, newList, _) = Logic.playRandomly(state.board, MyRandom(System.currentTimeMillis()), state.currentPlayer, open, Logic.randomMove)
+                                val (optBoard, _, newList, _) = Game.playRandomly(state.board, MyRandom(System.currentTimeMillis()), state.currentPlayer, open, Logic.randomMove)
                                 optBoard match {
                                     case Some(n) => gameLoop(state.copy(board = n, currentPlayer = Stone.Black, message = "Jogada aleatória feita"), newList, (state, open) :: history, config, contraPC)
                                     case None => println("Sem movimentos possíveis"); ()
@@ -158,7 +158,7 @@ object TUI extends App {
                                 readLine().toUpperCase() match {
                                     case "M" => realizarMovimento(state, open, history, config, contraPC)
                                     case "U" =>
-                                        Logic.undo(history) match {
+                                        Game.undo(history) match {
                                             case Some(((estadoAnterior, openAnterior), novoHistorico)) =>
                                                 println("Undo sucedido")
                                                 gameLoop(estadoAnterior, openAnterior, novoHistorico, config, contraPC)
@@ -205,13 +205,13 @@ object TUI extends App {
             case true => //ainda podemos jogar
                 state.board.get(coordFrom) match {
                     case Some(s) if s == state.currentPlayer =>
-                        Logic.play(state.board, state.currentPlayer, coordFrom, coordTo, openCoords) match {
+                        Game.play(state.board, state.currentPlayer, coordFrom, coordTo, openCoords) match {
                             case (Some(newBoard), newList) =>
                                 val estadoComSalto = state.copy(board = newBoard, message = s"Peça movida para $coordTo")
                                 render(estadoComSalto)
 
                                 //calculamos se dá para capturar mais
-                                Logic.podeSaltarMais(newBoard, coordTo, state.currentPlayer, config.rows, config.cols) match {
+                                Game.podeSaltarMais(newBoard, coordTo, state.currentPlayer, config.rows, config.cols) match {
                                     case true =>
                                         println("\nPodes fazer mais capturas com esta peça. Queres continuar? (s/n)")
                                         readLine().toLowerCase() match {
