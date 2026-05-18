@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f66ae5e7-d17a-41c8-bc77-636717c0d1f6" name="Changes" comment="meti o ganhar e o undo a dar na interface">
+    <list default="true" id="f66ae5e7-d17a-41c8-bc77-636717c0d1f6" name="Changes" comment="limpei ifs, em principio tá falta ver comentários">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/Controller.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/Controller.scala" afterDir="false" />
     </list>
@@ -271,7 +271,15 @@
       <option name="project" value="LOCAL" />
       <updated>1778615690114</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="limpei ifs, em principio tá falta ver comentários">
+      <option name="closed" value="true" />
+      <created>1779118449090</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1779118449090</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -293,7 +301,8 @@
     <MESSAGE value="apagado main" />
     <MESSAGE value="feito o t7" />
     <MESSAGE value="meti o ganhar e o undo a dar na interface" />
-    <option name="LAST_COMMIT_MESSAGE" value="meti o ganhar e o undo a dar na interface" />
+    <MESSAGE value="limpei ifs, em principio tá falta ver comentários" />
+    <option name="LAST_COMMIT_MESSAGE" value="limpei ifs, em principio tá falta ver comentários" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
