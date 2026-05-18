@@ -17,7 +17,7 @@ Optámos por organizar o projeto por responsabilidades lógicas em vez de tarefa
 3. ADAPTABILIDADE
 O tabuleiro foi implementado para ser de tamanho variável. O utilizador define as dimensões 
 no início, e o sistema calcula automaticamente as duas casas centrais para remover, 
-respeitando a regra de inicialização do Kōnane.
+respeitando a regra de inicialização do Könane.
 
 4. REQUISITOS CUMPRIDOS
 - Implementação total das tarefas T1, T2, T3 e T4.
@@ -25,4 +25,4 @@ respeitando a regra de inicialização do Kōnane.
 - Suporte para capturas múltiplas (o jogador pode escolher continuar a saltar).
 
 COMO TESTAR:
-Executar o ficheiro 'Game.scala' (objeto KonaneGame) para jogar na consola
+Executar o ficheiro 'Game.scala' (objeto KönaneGame) para jogar na consola

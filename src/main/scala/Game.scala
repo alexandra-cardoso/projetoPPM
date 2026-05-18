@@ -8,7 +8,6 @@ case class Game(
                    cols : Int,
                    currentPlayer: Stone, // ou as pedras pretas ou as brancas
                    message: String = ""
-
                )
 
 object Game {
@@ -17,8 +16,7 @@ object Game {
         case Stone.White => Stone.Black
     }
 
-   
-
+    
     @tailrec //compilador otimiza isto para funcionar como um ciclo while: evita stack overflow
     def getOpenCoords(game: Game, r: Int, c: Int, acc: List[Coord2D]): List[Coord2D] = { //usamos acumulador que guarda os valores vistos ao longo da fc recursiva
         (r, c) match { //vamos procurar as linhas e colunas

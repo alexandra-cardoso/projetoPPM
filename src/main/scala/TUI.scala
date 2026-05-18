@@ -148,7 +148,7 @@ object TUI extends App {
                         (contraPC, state.currentPlayer) match { //vamos pedir a jogada
                             case (true, Stone.White) =>
                                 println("A processar")
-                                val (optBoard, _, newList, _) = Game.playRandomly(state.board, MyRandom(System.currentTimeMillis()), state.currentPlayer, open, Logic.randomMove)
+                                val (optBoard, _, newList, _) = Game.playRandomly(state.board, MyRandom(System.currentTimeMillis()), state.currentPlayer, open, Game.randomMove)
                                 optBoard match {
                                     case Some(n) => gameLoop(state.copy(board = n, currentPlayer = Stone.Black, message = "Jogada aleatória feita"), newList, (state, open) :: history, config, contraPC)
                                     case None => println("Sem movimentos possíveis"); ()
