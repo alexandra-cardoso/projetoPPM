@@ -125,7 +125,7 @@ class Controller {
                                 lblStatus.setText(s"Peça $clickedCoord selecionada. Escolhe o destino.") //coloca esta mensagem no painel de jogo
 
                                 if (showHints) { //se tiver num nível de dificuldade em que showHints está a true, significa que pode destacar os caminhos para onde se pode deslocar a peça selecionada
-                                    val destinos = obterDestinosValidos(clickedCoord, currentPlayer, currentBoard) //obtem os destinos validos para a peça selecionada
+                                    val destinos = Logic.obterDestinosValidos(clickedCoord, currentPlayer, currentBoard,ROWS,COLS) //obtem os destinos validos para a peça selecionada
                                     destinos.foreach(d => destacarCelula(d, "rgba(255, 0, 0, 0.4)")) //mete a vermelho os sítios para onde pode ir
                                 }
 
@@ -159,7 +159,7 @@ class Controller {
                                                 renderBoard()//desenha o tabuleiro atualizado
                                                 destacarCelula(clickedCoord, "rgba(255, 255, 0, 0.4)") // destaca a amarelo para indicar que pode continuar, ao contrário de quando pode jogar apenas uma vez e aparece a verde
 
-                                                val proximosDestinos = obterDestinosValidos(clickedCoord, currentPlayer, newBoard) //vejo todos os destinos possíveis para ainda posso andar e meto destacado
+                                                val proximosDestinos = Logic.obterDestinosValidos(clickedCoord, currentPlayer, newBoard,ROWS,COLS) //vejo todos os destinos possíveis para ainda posso andar e meto destacado
                                                 proximosDestinos.foreach(d => destacarCelula(d, "rgba(255, 0, 0, 0.4)"))
 
                                                 lblStatus.setText("Captura múltipla! Continua ou clica na peça para terminar.")
@@ -230,20 +230,7 @@ class Controller {
         renderBoard() //mostra tabuleiro atualizado
     }
 
-    def obterDestinosValidos(pos: Coord2D, p: Stone, board: Board): List[Coord2D] = {//metodo que verifica os destinos validos para poder assinala-los a vermelho lá em cima
-        val directions = List((2, 0), (-2, 0), (0, 2), (0, -2)) //crio uma lista de direções com as 4 direções que me posso mover
-        directions.flatMap {
-            case (dr, dc) =>
-            val target = (pos._1 + dr, pos._2 + dc) // crio a target como a coordenada onde tamos mais a direção selecionada
-            val mid = (pos._1 + dr / 2, pos._2 + dc / 2) // e a do meio vai ser a atual masi metade da direção selecionada
-
-            val dentro = target._1 >= 0 && target._1 < ROWS && target._2 >= 0 && target._2 < COLS // se estiver dentro do tabuleiro vai sempre estar tanto as linhas como as colunas entre 0 e 6
-            (dentro, board.contains(target), board.get(mid)) match { // se estou dentro, o board tem a posição target e a posição do meio é uma peça oponente
-                case (true, false, Some(mid_stone)) if mid_stone != p => Some(target) //então devolvo a posição de destino selecionada como válida
-                case _ => None //se n respeitar a condição n devolvo nenhuma coordenada pq n existe nenhuma válida
-            }
-        }
-    }
+   
 
     def fazerJogadaRandom(): Unit = { // Implementa a Tarefa T3
         currentOpenCoords match {

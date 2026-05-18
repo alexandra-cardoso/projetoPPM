@@ -8,7 +8,7 @@ import scala.io.StdIn.readInt
 
 
 object Logic {
-    def play(board: Board, player: Stone, coordFrom: Coord2D, coordTo: Coord2D, lstOpenCoords: List[Coord2D]):(Option[Board], List[Coord2D])= {
+    def play(board: Board, player: Stone, coordFrom: Coord2D, coordTo: Coord2D, lstOpenCoords: List[Coord2D]): (Option[Board], List[Coord2D]) = {
         val dif: Coord2D = (coordTo._1 - coordFrom._1, coordTo._2 - coordFrom._2) //quanto vai andar
         // Nota: Some é o que usamos pra contrariar o None, quando damos um valor, usa se o Some.
         val coordMeio: Option[Coord2D] = dif match { //este match vai devolver a coordenada do meio se a coordenada final dessa jogada estiver livre e se a posição do meio tiver uma peça adversária
@@ -25,7 +25,7 @@ object Logic {
         coordMeio match {
             case Some(m) =>
                 val novaLista = (coordFrom :: m :: lstOpenCoords).filterNot(_ == coordTo) //a nova lista das posições vazias vai ter a coord de onde a peça saiu, a do meio, que foi comida e NÃO VAI TER a posição para onde a peça ia (que antes estava nessa lista)
-                val novoBoard = board - coordFrom - m + (coordTo->player) //o novo tabuleiro tem um novo par, com a coordenada para onde a peça foi e a cor, e sem a coord de onde saiu e a do meio
+                val novoBoard = board - coordFrom - m + (coordTo -> player) //o novo tabuleiro tem um novo par, com a coordenada para onde a peça foi e a cor, e sem a coord de onde saiu e a do meio
                 (Some(novoBoard), novaLista) //retorna-se este par
             case _ => (None, lstOpenCoords) //se não, retorna este
         }
@@ -66,7 +66,7 @@ object Logic {
                 return (None, currentRand, lstOpenCoords, None)
             }
             val (coordTo, nextRand) = f(buracosATestar, currentRand) //usamos a função RandomMove basicamente, para descobrir, nesta lista de buracos, um aleatório
-            val coordFromOpt = findValidCoordFrom(board,rows,cols, player, coordTo) //usamos uma função auxiliar para ver se o buraco dado é jogável
+            val coordFromOpt = findValidCoordFrom(board, rows, cols, player, coordTo) //usamos uma função auxiliar para ver se o buraco dado é jogável
 
             coordFromOpt match {
                 case Some(coordFrom) => //temos sucesso (retorno da fç auxiliar é um Option ent se houver Some, temos casa pra onde ir)
@@ -82,7 +82,7 @@ object Logic {
         tentarJogar(r, lstOpenCoords)
     }
 
-    def findValidCoordFrom(board: Board,rows:Int, cols:Int, player: Stone, targetTo: Coord2D): Option[Coord2D] = {
+    def findValidCoordFrom(board: Board, rows: Int, cols: Int, player: Stone, targetTo: Coord2D): Option[Coord2D] = {
         val opponent = if (player == Stone.Black) Stone.White else Stone.Black
 
         val options = List(
@@ -123,15 +123,9 @@ object Logic {
         (chosenCoord, nextMyRandom)
     }
 
-    /*def isCenterOrCorner(c: Coord2D): Boolean = { //metodo que faz a verificação inicial de ser uma ponta ou um centro para saber se posso etirar a pedra
-        val centers = List((2, 2), (2, 3), (3, 2), (3, 3))
-        val corners = List((0, 0), (0, 5), (5, 0), (5, 5))
-        centers.contains(c) || corners.contains(c)
-    }*/
-
     def isCenterOrCorner(c: Coord2D, rows: Int, cols: Int): Boolean = {
-        val centers = List((rows/2-1, cols/2-1), (rows/2-1, cols/2), (rows/2, cols/2-1), (rows/2, cols/2))
-        val corners = List((0,0), (0, cols-1), (rows-1, 0), (rows-1, cols-1))
+        val centers = List((rows / 2 - 1, cols / 2 - 1), (rows / 2 - 1, cols / 2), (rows / 2, cols / 2 - 1), (rows / 2, cols / 2))
+        val corners = List((0, 0), (0, cols - 1), (rows - 1, 0), (rows - 1, cols - 1))
         centers.contains(c) || corners.contains(c)
     }
 
@@ -143,33 +137,33 @@ object Logic {
         val directions = List((2, 0), (-2, 0), (0, 2), (0, -2))
 
         // exists verifica se pelo menos uma direção permite o salto
-        directions.exists { 
+        directions.exists {
             case (dr, dc) =>
-            val target = (pos._1 + dr, pos._2 + dc)
-            val mid = (pos._1 + dr / 2, pos._2 + dc / 2)
+                val target = (pos._1 + dr, pos._2 + dc)
+                val mid = (pos._1 + dr / 2, pos._2 + dc / 2)
 
-            val dentro = target._1 >= 0 && target._1 < rows && target._2 >= 0 && target._2 < cols
+                val dentro = target._1 >= 0 && target._1 < rows && target._2 >= 0 && target._2 < cols
 
-            if (dentro) {
-                //Verificamos se o destino está contido na lista de buracos (currentOpenCoords)
-                // Se estiver no Board, não está vazio.
-                val destinoVazio = !board.contains(target)
-                val pecaNoMeio = board.get(mid)
+                if (dentro) {
+                    //Verificamos se o destino está contido na lista de buracos (currentOpenCoords)
+                    // Se estiver no Board, não está vazio.
+                    val destinoVazio = !board.contains(target)
+                    val pecaNoMeio = board.get(mid)
 
-                // O inimigo tem de existir (Some) e ser de cor diferente do jogador atual (p)
-                val temInimigoNoMeio = pecaNoMeio match {
-                    case Some(s) => s != p
-                    case None => false
-                }
+                    // O inimigo tem de existir (Some) e ser de cor diferente do jogador atual (p)
+                    val temInimigoNoMeio = pecaNoMeio match {
+                        case Some(s) => s != p
+                        case None => false
+                    }
 
-                if (destinoVazio && temInimigoNoMeio) {
-                    println(s"Salto extra disponível para $p de $pos para $target")
-                    true
+                    if (destinoVazio && temInimigoNoMeio) {
+                        println(s"Salto extra disponível para $p de $pos para $target")
+                        true
+                    } else false
                 } else false
-            } else false
         }
     }
-    
+
 
     // T5: Verifica se o jogador atual não tem movimentos possíveis, devolve vencedor.
     def verificarVencedor(board: Board, rows: Int, cols: Int, currentPlayer: Stone, open: List[Coord2D]): Option[Stone] = {
@@ -194,7 +188,22 @@ object Logic {
         history match {
             case Nil => None
             case head :: tail => Some((head, tail))
-            
+
         }
+
+    def obterDestinosValidos(pos: Coord2D, p: Stone, board: Board, rows: Int, cols: Int): List[Coord2D] = { //metodo que verifica os destinos validos para poder assinala-los a vermelho lá em cima
+        val directions = List((2, 0), (-2, 0), (0, 2), (0, -2)) //crio uma lista de direções com as 4 direções que me posso mover
+        directions.flatMap {
+            case (dr, dc) =>
+                val target = (pos._1 + dr, pos._2 + dc) // crio a target como a coordenada onde tamos mais a direção selecionada
+                val mid = (pos._1 + dr / 2, pos._2 + dc / 2) // e a do meio vai ser a atual masi metade da direção selecionada
+
+                val dentro = target._1 >= 0 && target._1 < rows && target._2 >= 0 && target._2 < cols // se estiver dentro do tabuleiro vai sempre estar tanto as linhas como as colunas entre 0 e 6
+                (dentro, board.contains(target), board.get(mid)) match { // se estou dentro, o board tem a posição target e a posição do meio é uma peça oponente
+                    case (true, false, Some(mid_stone)) if mid_stone != p => Some(target) //então devolvo a posição de destino selecionada como válida
+                    case _ => None //se n respeitar a condição n devolvo nenhuma coordenada pq n existe nenhuma válida
+                }
+        }
+    }    
 
 }

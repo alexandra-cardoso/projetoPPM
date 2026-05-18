@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f66ae5e7-d17a-41c8-bc77-636717c0d1f6" name="Changes" comment="MUDEI NOMES">
+    <list default="true" id="f66ae5e7-d17a-41c8-bc77-636717c0d1f6" name="Changes" comment="meti em resources tudo o que é fxml">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/Controller.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/Controller.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/Logic.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/Logic.scala" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,8 +76,8 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/main/scala" />
       <recent name="$PROJECT_DIR$/src/main/resources" />
+      <recent name="$PROJECT_DIR$/src/main/scala" />
     </key>
   </component>
   <component name="RunManager" selected="Application.Main">
@@ -142,6 +144,7 @@
       <workItem from="1777821982877" duration="195000" />
       <workItem from="1777988369667" duration="11671000" />
       <workItem from="1779046974869" duration="3951000" />
+      <workItem from="1779122596510" duration="129000" />
     </task>
     <task id="LOCAL-00001" summary="CENAS">
       <option name="closed" value="true" />
@@ -335,7 +338,15 @@
       <option name="project" value="LOCAL" />
       <updated>1779121288403</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="meti em resources tudo o que é fxml">
+      <option name="closed" value="true" />
+      <created>1779121790116</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1779121790116</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -364,7 +375,8 @@
     <MESSAGE value="apaguei random, juntamos o trait ao ficheiro MyRandom" />
     <MESSAGE value="tirei ficheiros do resources" />
     <MESSAGE value="MUDEI NOMES" />
-    <option name="LAST_COMMIT_MESSAGE" value="MUDEI NOMES" />
+    <MESSAGE value="meti em resources tudo o que é fxml" />
+    <option name="LAST_COMMIT_MESSAGE" value="meti em resources tudo o que é fxml" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
