@@ -15,7 +15,7 @@ class InitialPage extends Application { //√© a classe que permite mostrar o ecr√
     }
 }
 
-object HelloWorld {
+object InitialPage {
     def main(args: Array[String]): Unit = {
         Application.launch(classOf[InitialPage], args: _*)
     }
