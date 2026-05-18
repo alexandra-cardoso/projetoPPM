@@ -8,10 +8,10 @@ Optámos por organizar o projeto por responsabilidades lógicas em vez de tarefa
 - T1 & T3 (Inteligência Aleatória): Implementámos um sistema de "retry" recursivo. Se o computador 
   escolher um buraco inválido, a função 'tentarJogar' (Tail Recursive) filtra essa opção e 
   tenta novamente. Isto garante que o computador nunca "encrava" o jogo.
-- T2 (Lógica de Jogo): O método 'play' valida a distância do salto (exatamente 2 casas) e 
+- T2 (Lógica de Jogo): O metodo 'play' valida a distância do salto (exatamente 2 casas) e
   a existência de um inimigo no meio. A atualização da lista de espaços vazios é feita de 
   forma incremental.
-- T4 (Visualização): Todo o desenho do tabuleiro (incluindo números das colunas e divisórias) 
+- T4 (Visualização): Todo o desenho do tabuleiro (incluindo numeros das colunas e divisorias)
   foi feito usando recursividade pura. 
 
 3. ADAPTABILIDADE
