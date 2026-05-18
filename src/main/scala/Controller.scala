@@ -230,8 +230,6 @@ class Controller {
         renderBoard() //mostra tabuleiro atualizado
     }
 
-   
-
     def fazerJogadaRandom(): Unit = { // Implementa a Tarefa T3
         currentOpenCoords match {
             case Nil => // Vez das Pretas removerem a 1ª peça (Centro ou Canto)
@@ -270,7 +268,7 @@ class Controller {
                             val possibleTo = List((pos._1 + 2, pos._2), (pos._1 - 2, pos._2), (pos._1, pos._2 + 2), (pos._1, pos._2 - 2))
                                 .filter(t => t._1 >= 0 && t._1 < ROWS && t._2 >= 0 && t._2 < COLS && !board.contains(t))
 
-                            possibleTo match { 
+                            possibleTo match {
                                 case Nil => (None, rand, open, None) // lista vazia, não há movimentos possíveis
                                 case _ => // existem destinos possíveis
                                     val (target, nr) = Game.randomMove(possibleTo, rand)
