@@ -151,7 +151,7 @@ class Controller {
                                     currentOpenCoords = newOpenCoords //atualiza a lista de posições vazias
 
                                     // Verifica se pode saltar novamente com a MESMA peça
-                                    if (podeSaltarMais(newBoard, clickedCoord, currentPlayer)) {
+                                    if (Logic.podeSaltarMais(newBoard, clickedCoord, currentPlayer, ROWS, COLS)) {
                                         selectedCoord = Some(clickedCoord) // Mantém a peça selecionada no novo lugar
                                         renderBoard()
                                         destacarCelula(clickedCoord, "rgba(255, 255, 0, 0.4)") // coloquei a amarelo para indicar que pode continuar
@@ -167,7 +167,7 @@ class Controller {
                                 case None => //caso o play não ocorra com sucesso (logo não devolve nenhum tabuleiro)
                                     lblStatus.setText("Salto inválido! Escolhe novamente.") //enviamos uma mensagem de erro para o jogador
                                     // Se não houver salto múltiplo disponível, limpamos a seleção
-                                    if (!podeSaltarMais(currentBoard, fromCoord, currentPlayer)) {
+                                    if (!Logic.podeSaltarMais(currentBoard, fromCoord, currentPlayer, ROWS, COLS)) {
                                         selectedCoord = None
                                         renderBoard()
                                     }
@@ -288,7 +288,7 @@ class Controller {
                             currentOpenCoords = newList
                             renderBoard()
                             coordTo match {
-                                case Some(to) if podeSaltarMais(nb, to, currentPlayer) =>
+                                case Some(to) if Logic.podeSaltarMais(nb, to, currentPlayer, ROWS, COLS) =>
                                     realizarMovimentosRandom(nb, nextRand, newList, Some(to))
                                 case _ => finalizarTurno()
                             }
@@ -300,35 +300,6 @@ class Controller {
                 }
 
                 realizarMovimentosRandom(currentBoard, currentRand, currentOpenCoords, None)
-        }
-    }
-    def podeSaltarMais(board: Board, pos: Coord2D, p: Stone): Boolean = {//metodo que verifica a captura multipla
-        val directions = List((2, 0), (-2, 0), (0, 2), (0, -2))
-
-        // exists verifica se pelo menos uma direção permite o salto
-        directions.exists { case (dr, dc) =>
-            val target = (pos._1 + dr, pos._2 + dc)
-            val mid = (pos._1 + dr / 2, pos._2 + dc / 2)
-
-            val dentro = target._1 >= 0 && target._1 < ROWS && target._2 >= 0 && target._2 < COLS
-
-            if (dentro) {
-               //Verificamos se o destino está contido na lista de buracos (currentOpenCoords)
-                // Se estiver no Board, não está vazio.
-                val destinoVazio = !board.contains(target)
-                val pecaNoMeio = board.get(mid)
-
-                // O inimigo tem de existir (Some) e ser de cor diferente do jogador atual (p)
-                val temInimigoNoMeio = pecaNoMeio match {
-                    case Some(s) => s != p
-                    case None => false
-                }
-
-                if (destinoVazio && temInimigoNoMeio) {
-                    println(s"Salto extra disponível para $p de $pos para $target")
-                    true
-                } else false
-            } else false
         }
     }
 

@@ -1,5 +1,4 @@
 import Stone.Black
-
 import scala.io.StdIn.*
 import scala.annotation.tailrec
 
@@ -8,7 +7,7 @@ object TUI extends App {
 
     def start(): Unit = {
         println("=== BEM-VINDO AO KÖNANE (TUI) ===")
-        mainMenu(GameConfig(8, 8, 30, 1)) //valores aleatórios- padrão
+        mainMenu(GameConfig(8, 8, 90, 1)) //valores padrão, definidos por nós
     }
 
     @tailrec
@@ -41,8 +40,20 @@ object TUI extends App {
                 print("Tempo máx de jogada: ")
                 mainMenu(config.copy(timerSeconds = readLong()))
             case "5" =>
-                println("1. Fácil | 2. Médio | 3.Difícil")
-                mainMenu(config.copy(difficulty = readInt()))
+                println("\nEscolhe a dificuldade:")
+                println("1. Fácil: Dá 90s por jogada")
+                println("2. Médio: Dá 60s por jogada")
+                println("3. Difícil: Dá 30s por jogada")
+                print("Opção: ")
+
+                readInt() match {
+                    case 1 => mainMenu(config.copy(difficulty = 1, timerSeconds = 90))
+                    case 2 => mainMenu(config.copy(difficulty = 2, timerSeconds = 60))
+                    case 3 => mainMenu(config.copy(difficulty = 3, timerSeconds = 30))
+                    case _ =>
+                        println("Dificuldade inválida")
+                        mainMenu(config)
+                }
             case "0" => println("A fechar...")
             case _ =>
                 println("Opção Inválida!")
@@ -122,29 +133,61 @@ object TUI extends App {
     }
 
 
-    def realizarMovimento(state: Game, openCoords: List[Coord2D], history: List[(Game, List[Coord2D])], config: GameConfig, contraPC: Boolean): Unit = {
-        print("Origem (L C): ")
-        val coordFrom = (readInt(), readInt())
-        print("Destino (L C): ")
-        val coordTo = (readInt(), readInt())
+    def realizarMovimento(state: Game, openCoords: List[Coord2D], history: List[(Game, List[Coord2D])], config: GameConfig, contraPC: Boolean, coordFromOpt: Option[Coord2D] = None): Unit = {
+        val tempoI = System.currentTimeMillis() / 1000;
 
-        state.board.get(coordFrom) match {
-            case Some(s) if s == state.currentPlayer =>
-                val (res, newList) = Logic.play(state.board, state.currentPlayer, coordFrom, coordTo, openCoords)
-                res match {
-                    case Some(newBoard) =>
-                        println("Capturou. Continuar a caputar? (s/n)")
-                        readLine().toLowerCase() match {
-                            case "s" => gameLoop(state.copy(board = newBoard, message = "Capturou múltiplas peças!"), newList, (state, openCoords) :: history, config, contraPC)
-                            case _ => gameLoop(state.copy(board = newBoard, currentPlayer = Game.opponent(state.currentPlayer)), newList, (state, openCoords) :: history, config, contraPC)
+        //vamos ver se este movimento é a continuação dum salto com muitos movimentos ou se é o inicial da jogada
+        val coordFrom = coordFromOpt match { //se for uma continuação de jogada, recebe um coordFromOpt com valores
+            case None => //se não tivermos coordenada guardada na variável, é a 1ª jogada
+                print("Origem (L C): ")
+                (readInt(), readInt()) //as coordenadas são a combinação do escrito no terminal
+            case Some(pos) =>
+                println(s"\n(Captura Múltipla) A tua peça está em $pos. Podes continuar a capturar")
+                pos
+        }
+        print(coordFromOpt match {
+            case None => "Destino (L C): "
+            case Some(_) => "Novo Destino (L C): "
+        })
+        val coordTo = (readInt(), readInt()) //vamos buscar a coordenada escrita
+
+        val tempoF = System.currentTimeMillis() / 1000
+        val tempoDec = tempoF - tempoI
+
+        (tempoDec <= config.timerSeconds) match { //verificamos se o tempo de jogada ainda não ultrapassou o tempo limite
+            case false => //passou o tempo limite
+                val proxEstado = state.copy(currentPlayer = Game.opponent(state.currentPlayer), message = "Passou a vez por excesso de tempo")
+                gameLoop(proxEstado, openCoords, history, config, contraPC)
+
+            case true => //ainda podemos jogar
+                state.board.get(coordFrom) match {
+                    case Some(s) if s == state.currentPlayer =>
+                        Logic.play(state.board, state.currentPlayer, coordFrom, coordTo, openCoords) match {
+                            case (Some(newBoard), newList) =>
+                                val estadoComSalto = state.copy(board = newBoard, message = s"Peça movida para $coordTo")
+                                Game.render(estadoComSalto)
+
+                                //calculamos se dá para capturar mais
+                                Logic.podeSaltarMais(newBoard, coordTo, state.currentPlayer, config.rows, config.cols) match {
+                                    case true =>
+                                        println("\nPodes fazer mais capturas com esta peça. Queres continuar? (s/n)")
+                                        readLine().toLowerCase() match {
+                                            case "s" => realizarMovimento(estadoComSalto, newList, (state, openCoords) :: history, config, contraPC, Some(coordTo))
+                                            case _ => gameLoop(estadoComSalto.copy(currentPlayer = Game.opponent(state.currentPlayer), message = "Turno terminado"), newList, (state, openCoords) :: history, config, contraPC)
+                                        }
+                                    case false =>
+                                        println("\nCaptura feita!")
+                                        gameLoop(estadoComSalto.copy(currentPlayer = Game.opponent(state.currentPlayer)), newList, (state, openCoords) :: history, config, contraPC)
+                                }
+
+                            case (None, _) =>
+                                println("Salto inválido")
+                                realizarMovimento(state, openCoords, history, config, contraPC, coordFromOpt)
                         }
-                    case None =>
-                        println("Salto inválido")
+                    case _ =>
+                        println("Seleção inválida!")
                         gameLoop(state, openCoords, history, config, contraPC)
                 }
-            case _ =>
-                println("Seleção inválida!")
-                gameLoop(state, openCoords, history, config, contraPC)
         }
     }
     start()

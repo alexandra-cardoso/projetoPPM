@@ -6,12 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="f66ae5e7-d17a-41c8-bc77-636717c0d1f6" name="Changes" comment="meti o ganhar e o undo a dar na interface">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/Controller.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Controller.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/Controller.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/Controller.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/HelloWorld.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/HelloWorld.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/Logic.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/Logic.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/MenuController.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/MenuController.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/menu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/menu.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/TUI.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/TUI.scala" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,12 +33,12 @@
     &quot;assignee&quot;: &quot;alexandra-cardoso&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/alexandra-cardoso/projetoPPM.git",
-    "accountId": "3dd252e1-1e85-42d6-9aa6-c18954f64583"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/alexandra-cardoso/projetoPPM.git&quot;,
+    &quot;accountId&quot;: &quot;3dd252e1-1e85-42d6-9aa6-c18954f64583&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="2" />
   </component>

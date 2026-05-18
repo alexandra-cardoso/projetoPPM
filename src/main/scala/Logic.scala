@@ -139,6 +139,38 @@ object Logic {
         Math.abs(c1._1 - c2._1) + Math.abs(c1._2 - c2._2) == 1
     }
 
+    def podeSaltarMais(board: Board, pos: Coord2D, p: Stone, rows: Int, cols: Int): Boolean = { //metodo que verifica a captura multipla
+        val directions = List((2, 0), (-2, 0), (0, 2), (0, -2))
+
+        // exists verifica se pelo menos uma direção permite o salto
+        directions.exists { 
+            case (dr, dc) =>
+            val target = (pos._1 + dr, pos._2 + dc)
+            val mid = (pos._1 + dr / 2, pos._2 + dc / 2)
+
+            val dentro = target._1 >= 0 && target._1 < rows && target._2 >= 0 && target._2 < cols
+
+            if (dentro) {
+                //Verificamos se o destino está contido na lista de buracos (currentOpenCoords)
+                // Se estiver no Board, não está vazio.
+                val destinoVazio = !board.contains(target)
+                val pecaNoMeio = board.get(mid)
+
+                // O inimigo tem de existir (Some) e ser de cor diferente do jogador atual (p)
+                val temInimigoNoMeio = pecaNoMeio match {
+                    case Some(s) => s != p
+                    case None => false
+                }
+
+                if (destinoVazio && temInimigoNoMeio) {
+                    println(s"Salto extra disponível para $p de $pos para $target")
+                    true
+                } else false
+            } else false
+        }
+    }
+    
+
     // T5: Verifica se o jogador atual não tem movimentos possíveis, devolve vencedor.
     def verificarVencedor(board: Board, rows: Int, cols: Int, currentPlayer: Stone, open: List[Coord2D]): Option[Stone] = {
         val directions = List((2, 0), (-2, 0), (0, 2), (0, -2))
