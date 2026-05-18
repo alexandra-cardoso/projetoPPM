@@ -4,9 +4,7 @@ import scala.annotation.tailrec
 
 object TUI extends App {
     case class GameConfig(rows: Int, cols: Int, timerSeconds: Long, difficulty: Int)
-
     
-
     @tailrec
     def makeHeader(current: Int, max: Int): Unit = { // faz a primeira linha do tabuleiro dinamicamente para acompanhar o tamanho definido pelo jogador
         (current < max) match {
