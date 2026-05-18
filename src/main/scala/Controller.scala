@@ -108,7 +108,7 @@ class Controller {
             case firstRemoved :: Nil => // Caso exista apenas uma coordenada na lista (2ª peça das Brancas)
                 (Logic.isAdjacent(clickedCoord, firstRemoved), currentBoard.get(clickedCoord)) match {
                     case (true, Some(Stone.White)) => //caso seja uma peça adjacente e uma peça branca
-                        removerPecaInicial(clickedCoord)//remove a peça branca escolhida
+                        removerPecaInicial(clickedCoord) //remove a peça branca escolhida
                         lblStatus.setText("Jogo normal! Vez das Pretas.")
                     case _ =>
                         lblStatus.setText("Inválido! Escolhe uma peça branca adjacente.")
@@ -116,7 +116,7 @@ class Controller {
                 return
 
             case _ => // Jogo normal
-                selectedCoord match { //ao carregar na peça de origem é o que a torna vede no fundo
+                selectedCoord match { //ao carregar na peça de origem é o que a torna verde no fundo
                     case None => //caso não exista nenhuma peça selecionada de origem
                         currentBoard.get(clickedCoord) match { //vamos pegar na célula em que o jogador carregou
                             case Some(stone) if stone == currentPlayer => //se for do jogador atual
@@ -129,49 +129,55 @@ class Controller {
                                     destinos.foreach(d => destacarCelula(d, "rgba(255, 0, 0, 0.4)"))
                                 }
 
-                            case Some(_) => //caso a peça que selecionada para jogar seja do adversário, enviamos uma mensagem a avisar o jogador
+                            case Some(_) => //caso a peça selecionada para jogar seja do adversário, enviamos uma mensagem a avisar o jogador
                                 lblStatus.setText("Esta peça é do teu adversário!")
 
-                            case None => //caso o jogador selecione um painel que não contenha uma peça, enviamos uma mensagem avisar disso
+                            case None => //caso o jogador selecione um painel que não contenha uma peça, enviamos uma mensagem a avisar disso
                                 lblStatus.setText("Casa vazia! Escolhe uma peça tua para mover.")
                         }
 
-                    case Some(fromCoord) => //caso esteja a carregar numa coordenada de origem que já estava selecionada como coordenada de origem
-                        if (clickedCoord == fromCoord) { //caso a coordenada carregada corresponda a uma coordenada que já foi definida como a de origem
-                            selectedCoord=None
-                            renderBoard() //desseleciono a peça
-                        } else { // se carreguei numa outra coordenada, posso fazer  a jogada
-                            val (optBoard, newOpenCoords) = Logic.play(
-                                currentBoard, currentPlayer, fromCoord, clickedCoord, currentOpenCoords //chamo a lógica do play feita na primeira parte do trabaho[cite: 3]
-                            )
-                            optBoard match {
-                                case Some(newBoard) => //caso a jogada tenha sido válida
-                                    history = (Game(currentBoard, ROWS, COLS, currentPlayer, "Undo realizado"), currentOpenCoords) :: history
-                                    currentBoard = newBoard //criamos um novo tabuleiro, para retirar as peças da posição em que estavam
-                                    currentOpenCoords = newOpenCoords //atualiza a lista de posições vazias
+                    case Some(fromCoord) => //caso esteja a carregar numa coordenada de origem que já estava selecionada
+                        (clickedCoord == fromCoord) match { // <-- if/else substituído por match
+                            case true => //caso a coordenada carregada corresponda à que já foi definida como origem
+                                selectedCoord = None
+                                renderBoard() //desseleciono a peça
 
-                                    // Verifica se pode saltar novamente com a MESMA peça
-                                    if (Logic.podeSaltarMais(newBoard, clickedCoord, currentPlayer, ROWS, COLS)) {
-                                        selectedCoord = Some(clickedCoord) // Mantém a peça selecionada no novo lugar
-                                        renderBoard()
-                                        destacarCelula(clickedCoord, "rgba(255, 255, 0, 0.4)") // coloquei a amarelo para indicar que pode continuar
+                            case false => // se carreguei noutra coordenada, posso fazer a jogada
+                                val (optBoard, newOpenCoords) = Logic.play(
+                                    currentBoard, currentPlayer, fromCoord, clickedCoord, currentOpenCoords //chamo a lógica do play feita na primeira parte do trabalho
+                                )
+                                optBoard match {
+                                    case Some(newBoard) => //caso a jogada tenha sido válida
+                                        history = (Game(currentBoard, ROWS, COLS, currentPlayer, "Undo realizado"), currentOpenCoords) :: history
+                                        currentBoard = newBoard //criamos um novo tabuleiro, para retirar as peças da posição em que estavam
+                                        currentOpenCoords = newOpenCoords //atualiza a lista de posições vazias
 
-                                        val proximosDestinos = obterDestinosValidos(clickedCoord, currentPlayer, newBoard)
-                                        proximosDestinos.foreach(d => destacarCelula(d, "rgba(255, 0, 0, 0.4)"))
+                                        // Verifica se pode saltar novamente com a MESMA peça
+                                        Logic.podeSaltarMais(newBoard, clickedCoord, currentPlayer, ROWS, COLS) match { // <-- if/else substituído por match
+                                            case true =>
+                                                selectedCoord = Some(clickedCoord) // Mantém a peça selecionada no novo lugar
+                                                renderBoard()
+                                                destacarCelula(clickedCoord, "rgba(255, 255, 0, 0.4)") // coloquei a amarelo para indicar que pode continuar
 
-                                        lblStatus.setText("Captura múltipla! Continua ou clica na peça para terminar.")
-                                    } else {
-                                        finalizarTurno()
-                                    }
+                                                val proximosDestinos = obterDestinosValidos(clickedCoord, currentPlayer, newBoard)
+                                                proximosDestinos.foreach(d => destacarCelula(d, "rgba(255, 0, 0, 0.4)"))
 
-                                case None => //caso o play não ocorra com sucesso (logo não devolve nenhum tabuleiro)
-                                    lblStatus.setText("Salto inválido! Escolhe novamente.") //enviamos uma mensagem de erro para o jogador
-                                    // Se não houver salto múltiplo disponível, limpamos a seleção
-                                    if (!Logic.podeSaltarMais(currentBoard, fromCoord, currentPlayer, ROWS, COLS)) {
-                                        selectedCoord = None
-                                        renderBoard()
-                                    }
-                            }
+                                                lblStatus.setText("Captura múltipla! Continua ou clica na peça para terminar.")
+
+                                            case false =>
+                                                finalizarTurno()
+                                        }
+
+                                    case None => //caso o play não ocorra com sucesso (logo não devolve nenhum tabuleiro)
+                                        lblStatus.setText("Salto inválido! Escolhe novamente.") //enviamos uma mensagem de erro para o jogador
+                                        // Se não houver salto múltiplo disponível, limpamos a seleção
+                                        Logic.podeSaltarMais(currentBoard, fromCoord, currentPlayer, ROWS, COLS) match { // <-- if substituído por match
+                                            case false =>
+                                                selectedCoord = None
+                                                renderBoard()
+                                            case true => () //não faz nada, mantém a seleção
+                                        }
+                                }
                         }
                 }
         }
@@ -229,9 +235,10 @@ class Controller {
             val mid = (pos._1 + dr / 2, pos._2 + dc / 2)
 
             val dentro = target._1 >= 0 && target._1 < ROWS && target._2 >= 0 && target._2 < COLS
-            if (dentro && !board.contains(target) && board.get(mid).exists(_ != p)) {
-                Some(target) // Destino válido encontrado
-            } else None
+            (dentro, board.contains(target), board.get(mid)) match {
+                case (true, false, Some(mid_stone)) if mid_stone != p => Some(target)
+                case _ => None
+            }
         }
     }
 
@@ -263,7 +270,7 @@ class Controller {
                 removerPecaInicial(escolha)
                 lblStatus.setText("Random removeu 2ª peça. Jogo iniciado!")
 
-            case _ => // Jogo normal (o código que já tinhas)
+            case _ => // Jogo normal
                 history = (Game(currentBoard, ROWS, COLS, currentPlayer, "Undo realizado"), currentOpenCoords) :: history
 
                 def realizarMovimentosRandom(board: Board, rand: MyRandom, open: List[Coord2D], lastTo: Option[Coord2D]): Unit = {
@@ -273,11 +280,12 @@ class Controller {
                             val possibleTo = List((pos._1 + 2, pos._2), (pos._1 - 2, pos._2), (pos._1, pos._2 + 2), (pos._1, pos._2 - 2))
                                 .filter(t => t._1 >= 0 && t._1 < ROWS && t._2 >= 0 && t._2 < COLS && !board.contains(t))
 
-                            if (possibleTo.isEmpty) (None, rand, open, None)
-                            else {
-                                val (target, nr) = Logic.randomMove(possibleTo, rand)
-                                val (nb, nl) = Logic.play(board, currentPlayer, pos, target, open)
-                                (nb, nr, nl, Some(target))
+                            possibleTo match { // <-- if/else substituído por match na lista
+                                case Nil => (None, rand, open, None) // lista vazia, não há movimentos possíveis
+                                case _ => // existem destinos possíveis
+                                    val (target, nr) = Logic.randomMove(possibleTo, rand)
+                                    val (nb, nl) = Logic.play(board, currentPlayer, pos, target, open)
+                                    (nb, nr, nl, Some(target))
                             }
                     }
 
@@ -323,7 +331,10 @@ class Controller {
         timer = new javafx.animation.Timeline(
             new javafx.animation.KeyFrame(javafx.util.Duration.seconds(1), _ => {
                 tempoRestante -= 1
-                val cor = if (tempoRestante <= 10) "-fx-text-fill: red;" else "-fx-text-fill: #333;"
+                val cor = tempoRestante match {
+                    case t if t <= 10 => "-fx-text-fill: red;"
+                    case _            => "-fx-text-fill: #333;"
+                }
                 lblTimer.setStyle(s"-fx-font-size: 20px; -fx-font-weight: bold; $cor")
                 lblTimer.setText(s"⏱ $tempoRestante s")
                 if (tempoRestante <= 0) {

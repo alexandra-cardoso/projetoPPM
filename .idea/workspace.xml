@@ -7,8 +7,6 @@
     <list default="true" id="f66ae5e7-d17a-41c8-bc77-636717c0d1f6" name="Changes" comment="meti o ganhar e o undo a dar na interface">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/Controller.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/Controller.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/Logic.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/Logic.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/TUI.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/TUI.scala" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
