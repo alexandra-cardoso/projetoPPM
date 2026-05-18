@@ -5,6 +5,51 @@ import scala.annotation.tailrec
 object TUI extends App {
     case class GameConfig(rows: Int, cols: Int, timerSeconds: Long, difficulty: Int)
 
+    
+
+    @tailrec
+    def makeHeader(current: Int, max: Int): Unit = { // faz a primeira linha do tabuleiro dinamicamente para acompanhar o tamanho definido pelo jogador
+        (current < max) match {
+            case true =>
+                (current == 0) match {
+                    case true => print("    0")
+                    case false => print(f"$current%3d")
+                }
+                makeHeader(current + 1, max)
+            case false =>
+                println()
+        }
+    }
+
+    def render(game: Game): Unit = { //desenha efetivamente o board na consola chamando o draw que define o desenho do tabuleiro
+        makeHeader(0, game.cols)
+        println("  " + "-" * (game.cols * 3 + 1))
+        draw(game, 0, 0)
+    }
+
+    @tailrec
+    def draw(game: Game, r: Int, c: Int): Unit = {
+        (r, c) match {
+            case (row, 0) if row == game.rows => //caso esteja no final do tabuleiro
+                println("  " + "-" * (game.cols * 3 + 1))
+
+            case (row, col) if col == game.cols => // para todas as linhas com y=8 vai meter um | no final da linha
+                println("|")
+                draw(game, r + 1, 0) // desenha o board até aí e recomeça na linha asseguir recursivamente
+            case (row, col) => //caso não se saiba nenhum dos valores
+                (col == 0) match {
+                    case true => print(s"$row |")
+                    case false => ()
+                } // se a coluna for a de índice 0 ou seja inicio da linha ele imprime o número da linha + a |
+                game.board.get((row, col)) match {
+                    case Some(Stone.Black) => print(" B ")
+                    case Some(Stone.White) => print(" W ")
+                    case None => print(" . ")
+                }
+                draw(game, row, col + 1)
+        }
+    }
+
     def start(): Unit = {
         println("=== BEM-VINDO AO KÖNANE (TUI) ===")
         mainMenu(GameConfig(8, 8, 90, 1)) //valores padrão, definidos por nós
@@ -63,7 +108,7 @@ object TUI extends App {
 
     @tailrec
     def gameLoop(state: Game, open: List[Coord2D], history: List[(Game, List[Coord2D])], config: GameConfig, contraPC: Boolean): Unit = {
-        Game.render(state)
+        render(state)
         val pStr = state.currentPlayer match {
             case Stone.Black => "Pretas"
             case Stone.White => "Brancas"
@@ -165,7 +210,7 @@ object TUI extends App {
                         Logic.play(state.board, state.currentPlayer, coordFrom, coordTo, openCoords) match {
                             case (Some(newBoard), newList) =>
                                 val estadoComSalto = state.copy(board = newBoard, message = s"Peça movida para $coordTo")
-                                Game.render(estadoComSalto)
+                                render(estadoComSalto)
 
                                 //calculamos se dá para capturar mais
                                 Logic.podeSaltarMais(newBoard, coordTo, state.currentPlayer, config.rows, config.cols) match {
